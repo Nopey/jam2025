@@ -15,6 +15,9 @@
     (fn puff.move [self dt]
         (set self.position.x (+ self.position.x (* dt self.vx)))
         (set self.position.y (+ self.position.y (* dt self.vy)))
+        (local decay (math.exp (* dt -1)))
+        (set self.vx (* self.vx decay))
+        (set self.vy (* self.vy decay))
     )
     (fn puff.draw [self]
         (love.graphics.circle "fill" self.position.x self.position.y radius)
