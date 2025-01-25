@@ -1,7 +1,7 @@
 (local hero (require :lander))
 (local enemy (require :enemy-spawner))
 (local lume (require :lib.lume))
-(local moonshine (require :moonshine))
+(local moonshine (require :lib.moonshine))
 
 {
 
