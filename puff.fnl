@@ -24,7 +24,7 @@
         :offx 0
         :offy 0
 
-        :deadline (+ (love.timer.getTime) (lume.random 5))
+        :deadline (+ (love.timer.getTime) (lume.random 1 3))
 
         ; HACK: loading this bubble every time we emit a puff.
         :sprite (love.graphics.newImage "assets/small-bubble-pop.png")
@@ -38,7 +38,7 @@
 
         ; random movement effect
         (when (< self.offtime (love.timer.getTime))
-            (set self.offtime (+ (love.timer.getTime) (lume.random 0.5 1.2)))
+            (set self.offtime (+ (love.timer.getTime) (lume.random 0.4 1.0)))
             (set self.offx (lume.random -1 1))
             (set self.offy (lume.random -1 1))
         )

@@ -59,7 +59,7 @@
             ])
 
             (set self.effect (moonshine moonshine.effects.scanlines))
-            ; ; (set self.effect (self.effect.chain moonshine.effects.desaturate))
+            ; (set self.effect (self.effect.chain moonshine.effects.desaturate))
             (set self.effect (self.effect.chain moonshine.effects.boxblur))
             (set self.effect (self.effect.chain moonshine.effects.glow))
             (set self.effect (self.effect.chain moonshine.effects.chromasep))
@@ -68,9 +68,6 @@
             (set self.sprites.airsupply_tank (love.graphics.newImage "assets/airsupply_tank.png"))
             (set self.sprites.airsupply_air (love.graphics.newImage "assets/airsupply_air.png"))
             (set self.sprites.airsupply_alarm (love.graphics.newImage "assets/airsupply_alarm.png"))
-
-            ; (set self.effect.scanlines.thickness 5)
-            ; (set self.effect.scanlines.phase 1)
 
               (self.test:load)
               ; ; testing wave generator
@@ -180,7 +177,9 @@
             (local screen-x (/ (- (love.graphics.getWidth) (* self.internal-w scale)) 2))
             (local screen-y (/ (- (love.graphics.getHeight) (* self.internal-h scale)) 2))
 
-            (set self.effect.scanlines.width (* scale 1))
+            (set self.effect.scanlines.width (* scale 0.75))
+            ; (set self.effect.scanlines.thickness (* scale 0.3))
+            ; (set self.effect.scanlines.phase 1)
             (set self.effect.chromasep.radius (* scale 1))
             (set self.effect.boxblur.radius (* scale 0.3))
 

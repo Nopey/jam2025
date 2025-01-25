@@ -64,7 +64,7 @@
 				(table.insert self.bullets (bullet.make self.game self.x self.y self.rotation 500))
 			)
 			:spawn-puff (fn spawn-puff [self]
-				(local speed 50)
+				(local speed 70)
 				(local rotation  (+ self.rotation (* math.pi 0.5) (lume.random -0.2 0.2)))
 				(local vx (+ self.velocity.x (* (math.cos rotation) speed)))
 				(local vy (+ self.velocity.y (* (math.sin rotation) speed)))
