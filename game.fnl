@@ -69,7 +69,7 @@
 
     )     
     :update (fn update [self dt]
-        (set self.i-time (+ self.i-time  (* 1.5 dt ) ))
+        (set self.i-time (+ self.i-time  (* 1.0 dt ) ))
         (set self.effect.scanlines.phase self.i-time)
         (self.test:update dt)
         (each [k bullet (pairs self.test.bullets)]
