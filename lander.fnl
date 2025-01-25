@@ -7,9 +7,10 @@
 
 (var input [])
 
-(fn make-player [start-x start-y]  
+(fn make-player [game start-x start-y]  
     (var tb [])
     {
+		:game game
      	:x start-x
      	:y start-y
      	:speed 100
@@ -87,7 +88,8 @@
 						(set self.rotation (angle.normalize (- self.rotation (* dt self.rot-speed))))
 					)
 					self.use-mouse-controls (do
-						(local target_angle (lume.angle self.x self.y (love.mouse.getX) (love.mouse.getY)))
+						(local [mousex mousey] (self.game:getmouse))
+						(local target_angle (lume.angle self.x self.y mousex mousey))
 						(set self.rotation (angle.movetowards self.rotation target_angle (* dt self.rot-speed)))
 					)
 				)
@@ -146,9 +148,10 @@
 
 
      	:draw (fn draw [self]
-			(if self.use-mouse-controls
+			(when self.use-mouse-controls
 				; TODO: Make mouse controls indicator less ugly
-				(love.graphics.line self.x self.y (love.mouse.getX) (love.mouse.getY))
+				(local [mousex mousey] (self.game:getmouse))
+				(love.graphics.line self.x self.y mousex mousey)
 			)
 
      	    (love.graphics.draw self.sprite self.animation.quad self.x self.y 

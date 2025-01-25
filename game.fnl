@@ -3,9 +3,6 @@
 (local lume (require :lib.lume))
 (local moonshine (require :lib.moonshine))
 
-(local internal-w 640)
-(local internal-h 480)
-
 {
 
       
@@ -32,18 +29,24 @@
 ;   return pixel;
 ; }")
       ; :g-canvas (love.graphics.newCanvas 320 180)
-      :g-canvas (love.graphics.newCanvas internal-w internal-h)
+      :g-canvas nil ; canvas for offscreen rendering (fixed resolution)
+      :internal-w 640
+      :internal-h 480
 
       :i-time 0
 
       ; table of sprites
       :sprites []
 
-      :test (hero.make-player 100 100)
+      :test nil ; player
 
       :effect nil
 
       :init (fn init [self]
+            (set self.test (hero.make-player self 100 100))
+
+            (set self.g-canvas (love.graphics.newCanvas self.internal-w self.internal-h))
+
             (set self.effect (moonshine moonshine.effects.scanlines))
             ; (set self.effect (self.effect.chain moonshine.effects.desaturate))
             (set self.effect (self.effect.chain moonshine.effects.boxblur))
@@ -150,18 +153,29 @@
         (love.graphics.setCanvas)
         (do
             (local scale (math.min
-                  (/ (love.graphics.getWidth) internal-w)
-                  (/ (love.graphics.getHeight) internal-h)
+                  (/ (love.graphics.getWidth) self.internal-w)
+                  (/ (love.graphics.getHeight) self.internal-h)
             ))
-            (local screen-x (/ (- (love.graphics.getWidth) (* internal-w scale)) 2))
-            (local screen-y (/ (- (love.graphics.getHeight) (* internal-h scale)) 2))
-            (print scale screen-x screen-y)
+            (local screen-x (/ (- (love.graphics.getWidth) (* self.internal-w scale)) 2))
+            (local screen-y (/ (- (love.graphics.getHeight) (* self.internal-h scale)) 2))
             (self.effect
                   #(love.graphics.draw self.g-canvas screen-x screen-y 0 scale)
             )
         )
     	)
 
+      :getmouse (fn getmouse [self]
+            (local scale (math.min
+                  (/ (love.graphics.getWidth) self.internal-w)
+                  (/ (love.graphics.getHeight) self.internal-h)
+            ))
+            (local screen-x (/ (- (love.graphics.getWidth) (* self.internal-w scale)) 2))
+            (local screen-y (/ (- (love.graphics.getHeight) (* self.internal-h scale)) 2))
+            [
+                  (/ (- (love.mouse.getX) screen-x) scale)
+                  (/ (- (love.mouse.getY) screen-y) scale)
+            ]
+      )
 
       ; each HUMP compatible gamestate will need to implement this for hot reloading
       :reload (fn reload [self]
