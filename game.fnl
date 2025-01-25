@@ -38,9 +38,10 @@
 
       :test (hero.make-player 100 100)
 
-      :effect (moonshine moonshine.effects.scanlines) 
+      :effect nil
 
       :init (fn init [self]
+            (set self.effect (moonshine moonshine.effects.scanlines))
             ; (set self.effect (self.effect.chain moonshine.effects.desaturate))
             (set self.effect (self.effect.chain moonshine.effects.boxblur))
             (set self.effect (self.effect.chain moonshine.effects.glow))
