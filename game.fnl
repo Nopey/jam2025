@@ -176,9 +176,9 @@
             (set self.effect.chromasep.radius (* scale 1))
             (set self.effect.boxblur.radius (* scale 0.3))
 
-          ; (self.effect
-          ;       #(love.graphics.draw self.g-canvas screen-x screen-y 0 scale)
-          ; )
+            (self.effect
+                  #(love.graphics.draw self.g-canvas screen-x screen-y 0 scale)
+            )
         )
 
     	)
