@@ -13,7 +13,7 @@
 		:game game
      	:x start-x
      	:y start-y
-     	:speed 100
+     	:speed 50
 
 		:use-mouse-controls false
 
@@ -30,7 +30,7 @@
 			:airsupply-max 8
 			:airsupply-alarmthreshold 2
 
-			:max-velocity 200
+			:max-velocity 100
 
 			; when did the player start charging?
 			:charge_time nil
@@ -116,15 +116,15 @@
   	        	(let [vx (math.cos (- self.rotation (/ math.pi 2)) )
 										vy (math.sin (- self.rotation (/ math.pi 2)) )]
 
-					(set self.velocity.x (+ self.velocity.x (* dt 200 vx)))
-					(set self.velocity.y (+ self.velocity.y (* dt 200 vy)))
+					(set self.velocity.x (+ self.velocity.x (* dt self.speed vx)))
+					(set self.velocity.y (+ self.velocity.y (* dt self.speed vy)))
 				)
 
 				; spawn puff particles
 				(set self.puff-pressure (+ self.puff-pressure dt))
 				(while (> self.puff-pressure 0)
 					(self:spawn-puff)
-					(set self.puff-pressure (- self.puff-pressure (lume.random 0.2)))
+					(set self.puff-pressure (- self.puff-pressure (lume.random 0.1)))
 				)
 
 				(set self.airsupply (- self.airsupply dt))
