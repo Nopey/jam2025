@@ -46,7 +46,7 @@
 			:bullets tb
 			
 			:shoot (fn shoot [self dir]
-			           (table.insert self.bullets (bullet.make self.x self.y self.rotation 500)))
+			           (table.insert self.bullets (bullet.make self.game self.x self.y self.rotation 500)))
 			
      	:load (fn load [self]
      	          (set self.sprite
@@ -166,7 +166,7 @@
 			)
 			(when self.charge_time
 				(local charge (math.min 1 (/ (- (love.timer.getTime) self.charge_time) self.charge_max)))
-				(local charge-radius 30)
+				(local charge-radius 20)
 				(local angle1 0)
 				(local angle2 (* charge 2 math.pi))
 				(local segments (* charge 30))
