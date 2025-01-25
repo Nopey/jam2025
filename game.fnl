@@ -51,7 +51,7 @@
             (set self.g-canvas (love.graphics.newCanvas self.internal-w self.internal-h))
 
             (set self.effect (moonshine moonshine.effects.scanlines))
-            ; (set self.effect (self.effect.chain moonshine.effects.desaturate))
+            ; ; (set self.effect (self.effect.chain moonshine.effects.desaturate))
             (set self.effect (self.effect.chain moonshine.effects.boxblur))
             (set self.effect (self.effect.chain moonshine.effects.glow))
             (set self.effect (self.effect.chain moonshine.effects.chromasep))

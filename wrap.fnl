@@ -7,7 +7,6 @@
 ; (local hero (require :player))
 (local game (require :game))
 
-
 (local gamestate hump.gamestate)
 
 ; (set player (hero.make-player 100 100))
@@ -66,6 +65,7 @@
 
 
 (fn love.load []
+    (love.graphics.setDefaultFilter :nearest)
     (gamestate.registerEvents)
     ;(gamestate.registerEvents [
     ;    :draw :update
