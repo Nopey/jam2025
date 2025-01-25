@@ -121,11 +121,11 @@
         ; (self.crt-shader:send "SCREEN_TEXTURE" self.g-canvas)
         ; (self.crt-shader:send "iTime" self.i-time)
 
-        (love.graphics.print   (.. "velocity-x: " self.test.velocity.x) 0 0)
-        (love.graphics.print   (.. "velocity-y: " self.test.velocity.y) 0 25)
-        (love.graphics.print   (.. "bullets: " (lume.count self.test.bullets)) 0 50)
-        (love.graphics.print   (.. "i-time: " self.i-time) 0 75)
-        (love.graphics.print   (.. "rotation: " self.test.rotation) 0 100)
+        ; (love.graphics.print   (.. "velocity-x: " self.test.velocity.x) 0 0)
+        ; (love.graphics.print   (.. "velocity-y: " self.test.velocity.y) 0 25)
+        ; (love.graphics.print   (.. "bullets: " (lume.count self.test.bullets)) 0 50)
+        ; (love.graphics.print   (.. "i-time: " self.i-time) 0 75)
+        ; (love.graphics.print   (.. "rotation: " self.test.rotation) 0 100)
         
         (each [k bullet (pairs self.test.bullets)]
               (bullet:draw))
