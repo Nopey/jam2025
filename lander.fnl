@@ -1,6 +1,7 @@
 
 (local lume (require :lib.lume))
 (local bullet (require :bullet))
+(local puff (require :puff))
 (local angle (require :angle))
 ; (var bullets [])
 
@@ -8,7 +9,6 @@
 (var input [])
 
 (fn make-player [game start-x start-y]  
-    (var tb [])
     {
 		:game game
      	:x start-x
@@ -36,6 +36,8 @@
 			:charge_time nil
 			:charge_max 1.4
 
+			:puff-pressure 0
+
 			:sprite nil
 
 			:animation {
@@ -43,17 +45,23 @@
 				:quad nil
 			}
 
-			:bullets tb
+			:bullets []
 			
 			:shoot (fn shoot [self dir]
 			           (table.insert self.bullets (bullet.make self.game self.x self.y self.rotation 500)))
+			:spawn-puff (fn spawn-puff [self]
+				(local speed 50)
+				(local rotation  (+ self.rotation (* math.pi 0.5) (lume.random -0.2 0.2)))
+				(local vx (+ self.velocity.x (* (math.cos rotation) speed)))
+				(local vy (+ self.velocity.y (* (math.sin rotation) speed)))
+				(table.insert self.bullets (puff.make self.game self.x self.y vx vy))
+			)
 			
      	:load (fn load [self]
      	          (set self.sprite
      	                 (love.graphics.newImage "assets/player2.png"))
      	          (set self.animation.frames 1)
 
-     	          (set self.bullets [])
      	          (let [width (self.sprite:getWidth)
      	                height (self.sprite:getHeight)]
      	          	
@@ -111,6 +119,14 @@
 					(set self.velocity.x (+ self.velocity.x (* dt 200 vx)))
 					(set self.velocity.y (+ self.velocity.y (* dt 200 vy)))
 				)
+
+				; spawn puff particles
+				(set self.puff-pressure (+ self.puff-pressure dt))
+				(while (> self.puff-pressure 0)
+					(self:spawn-puff)
+					(set self.puff-pressure (- self.puff-pressure (lume.random 0.2)))
+				)
+
 				(set self.airsupply (- self.airsupply dt))
   	        )
 			  	    
