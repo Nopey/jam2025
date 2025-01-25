@@ -1,44 +1,86 @@
-(local fennel (require :lib.fennel))
-(local repl (require :lib.stdio))
-(local canvas (let [(w h) (love.window.getMode)]
-                (love.graphics.newCanvas w h)))
+; (local fennel (require "lib.fennel"))
+; (local repl (require :lib.stdio))
 
-(var scale 1)
+(local lume (require :lib.lume))
+(local hump (require :lib.hump))
+(local enemy (require :enemy-spawner))
+; (local hero (require :player))
+(local game (require :game))
 
-;; set the first mode
-(var (mode mode-name) nil)
 
-(fn set-mode [new-mode-name ...]
-  (set (mode mode-name) (values (require new-mode-name) new-mode-name))
-  (when mode.activate
-    (match (pcall mode.activate ...)
-      (false msg) (print mode-name "activate error" msg))))
+(local gamestate hump.gamestate)
 
-(fn love.load [args]
-  (set-mode :mode-intro)
-  (canvas:setFilter "nearest" "nearest")
-  (when (~= :web (. args 1)) (repl.start)))
+; (set player (hero.make-player 100 100))
 
-(fn safely [f]
-  (xpcall f #(set-mode :error-mode mode-name $ (fennel.traceback))))
 
-(fn love.draw []
-  ;; the canvas allows you to get sharp pixel-art style scaling; if you
-  ;; don't want that, just skip that and call mode.draw directly.
-  (love.graphics.setCanvas canvas)
-  (love.graphics.clear)
-  (love.graphics.setColor 1 1 1)
-  (safely mode.draw)
-  (love.graphics.setCanvas)
-  (love.graphics.setColor 1 1 1)
-  (love.graphics.draw canvas 0 0 0 scale scale))
+
+
+
+
+(fn test []
+    (for [i 1 10 1]
+         (print "i: " i)
+         (lua "coroutine.yield()"))
+    )
+
+
+
+(fn new-spawner [waves]
+      (print "coroutine called")
+      (coroutine.yield)
+      (each [_ wave (ipairs waves)]
+           (print "wave: " wave )
+           (lua "coroutine.yield(wave)")
+           ))
+
+
+(var spawner (coroutine.create new-spawner ))
+
+(coroutine.resume spawner [
+                     ["a" "b" "c"]
+                     ["one" "two" "three"]
+                   ])
+; (var spawner (new-spawner [
+;                            ["a" "b" "c"]
+;                            ["one" "two" "three"]
+;                          ]))
+
+(var menu {
+        :keyreleased (fn keyreleased [self key code]
+                    (if (= key "x") 
+                       (gamestate.switch game)
+                       (= key "c")
+                       (print "returned from coroutine: " (coroutine.resume spawner))))
+
+       :draw (fn draw [self] 
+                 (let [width (love.graphics.getWidth)
+                       height (love.graphics.getHeight)]
+                   (love.graphics.print "press x or c" (/ width 2) (/ height 2) ))
+             )
+     })
+
+
+
+; Jank, turn player into a proper module with a make-player later
+
+
+
+(fn love.load []
+    (gamestate.registerEvents)
+    (gamestate.switch menu)
+    ; (game:load)
+
+    ; (gamestate.load)
+    )
+(fn love.keypressed [key]
+  ;; LIVE RELOADING
+  (when (= "f5" key)
+        (gamestate.reload)))
 
 (fn love.update [dt]
-  (when mode.update
-    (safely #(mode.update dt set-mode))))
+    ; (gamestate.update dt)
+    )
 
-(fn love.keypressed [key]
-  (if (and (love.keyboard.isDown "lctrl" "rctrl" "capslock") (= key "q"))
-      (love.event.quit)
-      ;; add what each keypress should do in each mode
-      (safely #(mode.keypressed key set-mode))))
+(fn love.draw []
+    ; (gamestate.draw)
+    )

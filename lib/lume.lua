@@ -1,25 +1,10 @@
 --
 -- lume
 --
--- Copyright (c) 2018 rxi
+-- Copyright (c) 2017 rxi
 --
--- Permission is hereby granted, free of charge, to any person obtaining a copy of
--- this software and associated documentation files (the "Software"), to deal in
--- the Software without restriction, including without limitation the rights to
--- use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
--- of the Software, and to permit persons to whom the Software is furnished to do
--- so, subject to the following conditions:
---
--- The above copyright notice and this permission notice shall be included in all
--- copies or substantial portions of the Software.
---
--- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
--- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
--- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
--- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
--- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
--- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
--- SOFTWARE.
+-- This library is free software; you can redistribute it and/or modify it
+-- under the terms of the MIT license. See LICENSE for details.
 --
 
 local lume = { _version = "2.3.0" }
@@ -158,7 +143,7 @@ end
 
 
 function lume.isarray(x)
-  return type(x) == "table" and x[1] ~= nil
+  return (type(x) == "table" and x[1] ~= nil) and true or false
 end
 
 
@@ -302,7 +287,7 @@ function lume.reduce(t, fn, first)
 end
 
 
-function lume.unique(t)
+function lume.set(t)
   local rtn = {}
   for k in pairs(lume.invert(t)) do
     rtn[#rtn + 1] = k
@@ -724,9 +709,7 @@ end
 local ripairs_iter = function(t, i)
   i = i - 1
   local v = t[i]
-  if v ~= nil then 
-    return i, v
-  end
+  if v then return i, v end
 end
 
 function lume.ripairs(t)
@@ -753,6 +736,15 @@ function lume.color(str, mul)
     error(("bad color string '%s'"):format(str))
   end
   return r * mul, g * mul, b * mul, a * mul
+end
+
+
+function lume.rgba(color)
+  local a = math_floor((color / 16777216) % 256)
+  local r = math_floor((color /    65536) % 256)
+  local g = math_floor((color /      256) % 256)
+  local b = math_floor((color) % 256)
+  return r, g, b, a
 end
 
 
