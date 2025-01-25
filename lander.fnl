@@ -27,10 +27,14 @@
 			:drag-speed 10
 
 			:airsupply 5
-			:airsupply-max 10
+			:airsupply-max 8
 			:airsupply-alarmthreshold 2
 
 			:max-velocity 200
+
+			; when did the player start charging?
+			:charge_time nil
+			:charge_max 1.4
 
 			:sprite nil
 
@@ -57,18 +61,24 @@
 			     	          	(love.graphics.newQuad 0 0 (/ width 4) height width height))))
 
      	 :keyreleased (fn keyreleased [self key]
-     	                  (if (= key "x")
-     	                      (self:shoot self.direction)))
+
+		 	; release charge as bullet
+			(when (and (= key "x") self.charge_time)
+				(self:shoot self.direction)
+				(set self.charge_time nil)
+			)
+		 )
 
 		:mousepressed (fn mousepressed [self x y button istouch]
 			(set self.use-mouse-controls true)
-			(print "AYO!! mousepressed." button)
+			;(print "AYO!! mousepressed." button)
 		)
 		:keypressed (fn keypressed [self key scancode isrepeat]
 			(set self.use-mouse-controls false)
-			(print "AYO!! keypressed." key)
-     	 ;                 (if (= key "z")
-     	 ;                     (self:))
+			;(print "AYO!! keypressed." key)
+
+			; start charging
+			(when (and (= key "x") (not self.charge_time)) (set self.charge_time (love.timer.getTime)))
 		)
 
 			:update (fn update [self dt]
@@ -151,7 +161,20 @@
 			(when self.use-mouse-controls
 				; TODO: Make mouse controls indicator less ugly
 				(local [mousex mousey] (self.game:getmouse))
+				(love.graphics.setLineWidth 2)
 				(love.graphics.line self.x self.y mousex mousey)
+			)
+			(when self.charge_time
+				(local charge (math.min 1 (/ (- (love.timer.getTime) self.charge_time) self.charge_max)))
+				(local charge-radius 30)
+				(local angle1 0)
+				(local angle2 (* charge 2 math.pi))
+				(local segments (* charge 30))
+				(local arctype "open")
+  				(love.graphics.setColor (lume.color "#92e8c0")) ; bright greenish color from the palette
+				(love.graphics.setLineWidth 4)
+				(love.graphics.arc "line" arctype self.x self.y charge-radius angle1 angle2 segments)
+  				(love.graphics.setColor 1 1 1)
 			)
 
      	    (love.graphics.draw self.sprite self.animation.quad self.x self.y 
