@@ -33,6 +33,8 @@
 
       :i-time 0
 
+      ; table of sprites
+      :sprites []
 
       :test (hero.make-player 100 100)
 
@@ -48,6 +50,9 @@
             (set self.effect.scanlines.width 1.5)
             (set self.effect.chromasep.radius 2)
             (set self.effect.boxblur.radius 0.3)
+
+            (set self.sprites.airsupply_tank (love.graphics.newImage "assets/airsupply_tank.png"))
+            (set self.sprites.airsupply_air (love.graphics.newImage "assets/airsupply_air.png"))
 
             ; (set self.effect.scanlines.thickness 5)
             ; (set self.effect.scanlines.phase 1)
@@ -86,8 +91,10 @@
       
         ; set the canvas we're rendering to
         ; (self.g-canvas:clear)
-        (love.graphics.setCanvas self.g-canvas)
+        ; (love.graphics.setCanvas self.g-canvas)
+        (love.graphics.setCanvas {1 self.g-canvas :stencil true})
         (love.graphics.clear)
+        (love.graphics.setStencilTest)
         ; (love.graphics.setBlendMode "alpha")
       
         ; (love.graphics.setShader self.crt-shader)
@@ -101,8 +108,6 @@
         (love.graphics.print   (.. "bullets: " (lume.count self.test.bullets)) 0 50)
         (love.graphics.print   (.. "i-time: " self.i-time) 0 75)
         (love.graphics.print   (.. "rotation: " self.test.rotation) 0 100)
-
-
         
         (each [k bullet (pairs self.test.bullets)]
               (bullet:draw))
@@ -111,17 +116,33 @@
       	; (love.graphics.draw player.sprite player.x player.y))
 
       	
-      	; (self.effect 
+        ; (self.effect
       	(self.test:draw)
-      ; )
-      	(love.graphics.setCanvas)
+        ; )
 
-      	(self.effect 
-            	#(love.graphics.draw self.g-canvas)
+        ; draw airsupply ui
+        (local supply-x 550)
+        (local supply-y 40)
+        (local supply-w 32)
+        (local supply-h 16)
+        (local airsupply-amt 0.40) ; TODO: make airsupply into a gameplay thing
+        (love.graphics.draw self.sprites.airsupply_tank supply-x supply-y)
+        (love.graphics.stencil (fn draw-airsupply-stencil []
+            (love.graphics.rectangle "fill" (+ supply-x (* supply-w (- 1 airsupply-amt))) supply-y supply-w supply-h)
+        ))
+        (love.graphics.setStencilTest "equal" 1)
+        (love.graphics.draw self.sprites.airsupply_air supply-x supply-y)
+        ;(self.sprites.airsupply_air)
+
+        (love.graphics.setCanvas)
+        (love.graphics.setStencilTest)
+
+        (self.effect
+            #(love.graphics.draw self.g-canvas)
         )
         
         ; (love.graphics.setShader)
-      	; (love.graphics.draw self.g-canvas 200 200 0.25)
+        ; (love.graphics.draw self.g-canvas 200 200 0.25)
     	)
 
 
