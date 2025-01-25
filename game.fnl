@@ -29,7 +29,7 @@
 ;   return pixel;
 ; }")
       ; :g-canvas (love.graphics.newCanvas 320 180)
-      :g-canvas (love.graphics.newCanvas)
+      :g-canvas (love.graphics.newCanvas 683 384)
 
       :i-time 0
 
@@ -147,7 +147,7 @@
         (love.graphics.setCanvas)
 
         (self.effect
-            #(love.graphics.draw self.g-canvas)
+            #(love.graphics.draw self.g-canvas 0 0 0 2)
         )
         
         ; (love.graphics.setShader)
