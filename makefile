@@ -1,6 +1,6 @@
 VERSION=0.1.0
 LOVE_VERSION=11.5
-NAME="Deep Sea Diver"
+NAME=DeepSeaDiver
 ITCH_ACCOUNT=change-me-too
 URL=https://gitlab.com/Nopey/jam2025
 AUTHOR="Magnus Larsen, Tyler Patton"
@@ -28,7 +28,7 @@ love: $(LOVEFILE)
 # platform-specific distributables
 
 REL=$(PWD)/buildtools/love-release.sh # https://p.hagelb.org/love-release.sh
-FLAGS=-a "$(AUTHOR)" --description $(DESCRIPTION) \
+FLAGS=-a "$(AUTHOR)" --description "$(DESCRIPTION)" \
 	--love $(LOVE_VERSION) --url $(URL) --version $(VERSION) --lovefile $(LOVEFILE)
 
 releases/$(NAME)-$(VERSION)-x86_64.AppImage: $(LOVEFILE)
@@ -45,7 +45,7 @@ releases/$(NAME)-$(VERSION)-win.zip: $(LOVEFILE)
 	mv releases/$(NAME)-win32.zip $@
 
 releases/$(NAME)-$(VERSION)-web.zip: $(LOVEFILE)
-	buildtools/love-js/love-js.sh releases/$(NAME)-$(VERSION).love $(NAME) -v=$(VERSION) -a=$(AUTHOR) -o=releases
+	buildtools/love-js/love-js.sh releases/$(NAME)-$(VERSION).love $(NAME) -v=$(VERSION) -a="$(AUTHOR)" -o=releases
 
 linux: releases/$(NAME)-$(VERSION)-x86_64.AppImage
 mac: releases/$(NAME)-$(VERSION)-macos.zip
@@ -54,7 +54,7 @@ web: releases/$(NAME)-$(VERSION)-web.zip
 
 
 runweb: $(LOVEFILE)
-	buildtools/love-js/love-js.sh $(LOVEFILE) $(NAME) -v=$(VERSION) -a=$(AUTHOR) -o=releases -r -n
+	buildtools/love-js/love-js.sh $(LOVEFILE) $(NAME) -v=$(VERSION) -a="$(AUTHOR)" -o=releases -r -n
 # If you release on itch.io, you should install butler:
 # https://itch.io/docs/butler/installing.html
 
