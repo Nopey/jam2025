@@ -30,8 +30,8 @@
 ; }")
       ; :g-canvas (love.graphics.newCanvas 320 180)
       :g-canvas nil ; canvas for offscreen rendering (fixed resolution)
-      :internal-w 640
-      :internal-h 480
+      :internal-w 320
+      :internal-h 240
 
       :i-time 0
 
@@ -54,10 +54,6 @@
             (set self.effect (self.effect.chain moonshine.effects.chromasep))
             (set self.effect (self.effect.chain moonshine.effects.crt))
      
-            (set self.effect.scanlines.width 1.5)
-            (set self.effect.chromasep.radius 2)
-            (set self.effect.boxblur.radius 0.3)
-
             (set self.sprites.airsupply_tank (love.graphics.newImage "assets/airsupply_tank.png"))
             (set self.sprites.airsupply_air (love.graphics.newImage "assets/airsupply_air.png"))
             (set self.sprites.airsupply_alarm (love.graphics.newImage "assets/airsupply_alarm.png"))
@@ -129,8 +125,8 @@
         ; )
 
         ; draw airsupply ui
-        (local supply-x 550)
-        (local supply-y 40)
+        (local supply-x 280)
+        (local supply-y 10)
         (local supply-w 32)
         (local supply-h 16)
         (local airsupply-amt (/ self.test.airsupply self.test.airsupply-max))
@@ -158,6 +154,11 @@
             ))
             (local screen-x (/ (- (love.graphics.getWidth) (* self.internal-w scale)) 2))
             (local screen-y (/ (- (love.graphics.getHeight) (* self.internal-h scale)) 2))
+
+            (set self.effect.scanlines.width (* scale 1))
+            (set self.effect.chromasep.radius (* scale 1))
+            (set self.effect.boxblur.radius (* scale 0.3))
+
             (self.effect
                   #(love.graphics.draw self.g-canvas screen-x screen-y 0 scale)
             )
