@@ -25,6 +25,10 @@
 			:rot-speed 1.5
 			:drag-speed 10
 
+			:airsupply 5
+			:airsupply-max 10
+			:airsupply-alarmthreshold 2
+
 			:max-velocity 200
 
 			:sprite nil
@@ -88,16 +92,14 @@
 					)
 				)
 
-			  	(when (love.keyboard.isDown "z")
-  	        (let [vx (math.cos self.rotation)
-  	              vy (math.sin self.rotation)]
+			(when (and (love.keyboard.isDown "z") (>= self.airsupply 0))
+  	        	(let [vx (math.cos self.rotation)
+					vy (math.sin self.rotation)]
 
-      	        (set self.velocity.x (+ self.velocity.x (* dt 200 vx)))
-      	        (set self.velocity.y (+ self.velocity.y (* dt 200 vy)))
-  	          
-  	          )
-  	        
-  	        
+					(set self.velocity.x (+ self.velocity.x (* dt 200 vx)))
+					(set self.velocity.y (+ self.velocity.y (* dt 200 vy)))
+				)
+				(set self.airsupply (- self.airsupply dt))
   	        )
 			  	    
 			    

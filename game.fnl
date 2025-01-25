@@ -53,6 +53,7 @@
 
             (set self.sprites.airsupply_tank (love.graphics.newImage "assets/airsupply_tank.png"))
             (set self.sprites.airsupply_air (love.graphics.newImage "assets/airsupply_air.png"))
+            (set self.sprites.airsupply_alarm (love.graphics.newImage "assets/airsupply_alarm.png"))
 
             ; (set self.effect.scanlines.thickness 5)
             ; (set self.effect.scanlines.phase 1)
@@ -125,17 +126,24 @@
         (local supply-y 40)
         (local supply-w 32)
         (local supply-h 16)
-        (local airsupply-amt 0.40) ; TODO: make airsupply into a gameplay thing
+        (local airsupply-amt (/ self.test.airsupply self.test.airsupply-max))
         (love.graphics.draw self.sprites.airsupply_tank supply-x supply-y)
         (love.graphics.stencil (fn draw-airsupply-stencil []
             (love.graphics.rectangle "fill" (+ supply-x (* supply-w (- 1 airsupply-amt))) supply-y supply-w supply-h)
         ))
         (love.graphics.setStencilTest "equal" 1)
         (love.graphics.draw self.sprites.airsupply_air supply-x supply-y)
-        ;(self.sprites.airsupply_air)
+        (love.graphics.setStencilTest)
+        (when (or
+                  ; completely out, draw alarm on all frames.
+                  (< self.test.airsupply 0)
+                  ; blink alarm when we're low
+                  (and (< self.test.airsupply self.test.airsupply-alarmthreshold) (< (% self.i-time 0.8) 0.5))
+            )
+            (love.graphics.draw self.sprites.airsupply_alarm supply-x supply-y)
+        )
 
         (love.graphics.setCanvas)
-        (love.graphics.setStencilTest)
 
         (self.effect
             #(love.graphics.draw self.g-canvas)
