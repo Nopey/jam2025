@@ -1,11 +1,11 @@
 
 (local lume (require :lib.lume))
 (local bullet (require :bullet))
+(local angle (require :angle))
 ; (var bullets [])
 
 
 (var input [])
-
 
 (fn make-player [start-x start-y]  
     (var tb [])
@@ -13,6 +13,8 @@
      	:x start-x
      	:y start-y
      	:speed 100
+
+		:use-mouse-controls false
 
      	:direction 1
 
@@ -53,11 +55,16 @@
      	                  (if (= key "x")
      	                      (self:shoot self.direction)))
 
-     	 
-     	 ; :keypressed (fn keypressed [self key]
+		:mousepressed (fn mousepressed [self x y button istouch]
+			(set self.use-mouse-controls true)
+			(print "AYO!! mousepressed." button)
+		)
+		:keypressed (fn keypressed [self key scancode isrepeat]
+			(set self.use-mouse-controls false)
+			(print "AYO!! keypressed." key)
      	 ;                 (if (= key "z")
      	 ;                     (self:))
-     	 ;                 )
+		)
 
 			:update (fn update [self dt]
 
@@ -68,10 +75,18 @@
 
 			  	    
 
-			    (if (love.keyboard.isDown "right")
-				        (set self.rotation (+ self.rotation (* dt self.rot-speed))))
-			    (if (love.keyboard.isDown "left")
-				        (set self.rotation (- self.rotation (* dt self.rot-speed))))
+			    (if 
+					(love.keyboard.isDown "right") (do
+						(set self.rotation (angle.normalize (+ self.rotation (* dt self.rot-speed))))
+					)
+					(love.keyboard.isDown "left") (do
+						(set self.rotation (angle.normalize (- self.rotation (* dt self.rot-speed))))
+					)
+					self.use-mouse-controls (do
+						(local target_angle (lume.angle self.x self.y (love.mouse.getX) (love.mouse.getY)))
+						(set self.rotation (angle.movetowards self.rotation target_angle (* dt self.rot-speed)))
+					)
+				)
 
 			  	(when (love.keyboard.isDown "z")
   	        (let [vx (math.cos self.rotation)
@@ -125,26 +140,15 @@
 					(if (< self.velocity.x -1)
 			   		(set self.direction -1))
 		    )
-
-
-		  (each [event (love.event.poll)]
-		        (if (= event "keyreleased" )
-		            (print "released key?")
-		            (print "test?")))
-
-		  (fn love.keyreleased [key]
-		      (self:keyreleased key))
-
-		 ;  (print (love.event.poll))
-			; (if (love.keyreleased "x")
-			;     (player.shoot player.direction))
-
-			
-		  
      	)
 
 
      	:draw (fn draw [self]
+			(if self.use-mouse-controls
+				; TODO: Make mouse controls indicator less ugly
+				(love.graphics.line self.x self.y (love.mouse.getX) (love.mouse.getY))
+			)
+
      	    (love.graphics.draw self.sprite self.animation.quad self.x self.y 
      	                        self.rotation 1 1
      	                        (/ (self.sprite:getWidth) 8) 

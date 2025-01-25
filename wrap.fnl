@@ -67,6 +67,11 @@
 
 (fn love.load []
     (gamestate.registerEvents)
+    ;(gamestate.registerEvents [
+    ;    :draw :update
+    ;    :keypressed :keyreleased
+    ;    :mousepressed :mousereleased
+    ;])
     (gamestate.switch menu)
     ; (game:load)
 

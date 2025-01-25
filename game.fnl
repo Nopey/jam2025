@@ -130,7 +130,16 @@
                   (lume.hotswap :game)
                   (self.init self))
 
-  
+      :keypressed (fn keypressed [self key scancode isrepeat]
+                  (self.test:keypressed key scancode isrepeat))
+      :keyreleased (fn keyreleased [self key scancode]
+                  (self.test:keyreleased key scancode))
+
+      :mousepressed (fn mousepressed [self x y button istouch]
+                  (self.test:mousepressed x y button istouch))
+      :mousereleased (fn mousereleased [self x y button istouch]
+                  (self.test:mousepressed x y button istouch))
+
      }
 
 
