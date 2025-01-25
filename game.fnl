@@ -3,6 +3,9 @@
 (local lume (require :lib.lume))
 (local moonshine (require :lib.moonshine))
 
+(local internal-w 640)
+(local internal-h 480)
+
 {
 
       
@@ -29,7 +32,7 @@
 ;   return pixel;
 ; }")
       ; :g-canvas (love.graphics.newCanvas 320 180)
-      :g-canvas (love.graphics.newCanvas 683 384)
+      :g-canvas (love.graphics.newCanvas internal-w internal-h)
 
       :i-time 0
 
@@ -145,13 +148,18 @@
         )
 
         (love.graphics.setCanvas)
-
-        (self.effect
-            #(love.graphics.draw self.g-canvas 0 0 0 2)
+        (do
+            (local scale (math.min
+                  (/ (love.graphics.getWidth) internal-w)
+                  (/ (love.graphics.getHeight) internal-h)
+            ))
+            (local screen-x (/ (- (love.graphics.getWidth) (* internal-w scale)) 2))
+            (local screen-y (/ (- (love.graphics.getHeight) (* internal-h scale)) 2))
+            (print scale screen-x screen-y)
+            (self.effect
+                  #(love.graphics.draw self.g-canvas screen-x screen-y 0 scale)
+            )
         )
-        
-        ; (love.graphics.setShader)
-        ; (love.graphics.draw self.g-canvas 200 200 0.25)
     	)
 
 
