@@ -46,15 +46,15 @@
 			
      	:load (fn load [self]
      	          (set self.sprite
-     	                 (love.graphics.newImage "assets/witch.png"))
-     	          (set self.animation.frames 4)
+     	                 (love.graphics.newImage "assets/player2.png"))
+     	          (set self.animation.frames 1)
 
      	          (set self.bullets [])
      	          (let [width (self.sprite:getWidth)
      	                height (self.sprite:getHeight)]
      	          	
 			     	          (set self.animation.quad
-			     	          	(love.graphics.newQuad 0 0 (/ width 4) height width height))))
+			     	          	(love.graphics.newQuad 0 0 (/ width 1) height width height))))
 
      	 :keyreleased (fn keyreleased [self key]
      	                  (if (= key "x")
@@ -95,8 +95,8 @@
 				)
 
 			(when (and (love.keyboard.isDown "z") (>= self.airsupply 0))
-  	        	(let [vx (math.cos self.rotation)
-					vy (math.sin self.rotation)]
+  	        	(let [vx (math.cos (- self.rotation (/ math.pi 2)) )
+										vy (math.sin (- self.rotation (/ math.pi 2)) )]
 
 					(set self.velocity.x (+ self.velocity.x (* dt 200 vx)))
 					(set self.velocity.y (+ self.velocity.y (* dt 200 vy)))
@@ -156,7 +156,7 @@
 
      	    (love.graphics.draw self.sprite self.animation.quad self.x self.y 
      	                        self.rotation 1 1
-     	                        (/ (self.sprite:getWidth) 8) 
+     	                        (/ (self.sprite:getWidth) 2) 
      	                        (/ (self.sprite:getHeight) 2)))
      })
      ; 	:draw (fn draw [self]
