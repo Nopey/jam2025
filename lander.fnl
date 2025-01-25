@@ -6,6 +6,9 @@
 
 (var input [])
 
+(fn normalize-angle [angle]
+	(% angle (* 2 math.pi))
+)
 
 (fn make-player [start-x start-y]  
     (var tb [])
@@ -69,9 +72,9 @@
 			  	    
 
 			    (if (love.keyboard.isDown "right")
-				        (set self.rotation (+ self.rotation (* dt self.rot-speed))))
+				        (set self.rotation (normalize-angle (+ self.rotation (* dt self.rot-speed)))))
 			    (if (love.keyboard.isDown "left")
-				        (set self.rotation (- self.rotation (* dt self.rot-speed))))
+				        (set self.rotation (normalize-angle (- self.rotation (* dt self.rot-speed)))))
 
 			  	(when (love.keyboard.isDown "z")
   	        (let [vx (math.cos self.rotation)
