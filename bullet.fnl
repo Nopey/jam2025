@@ -8,7 +8,7 @@
     		:y y
     	}
 	   	:speed speed
-	   	:rotation rotation
+	   	:rotation (- rotation (/ math.pi 2))
 
 	   	:move (fn move [self dt]
 
