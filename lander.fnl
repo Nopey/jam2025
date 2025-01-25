@@ -5,6 +5,15 @@
 (local angle (require :angle))
 ; (var bullets [])
 
+(local face-anim-fps 2)
+(local face-quads (let [image-w 384 image-h 32]
+	{
+		:neutral [
+			(love.graphics.newQuad 0 0 32 32 image-w image-h)
+			(love.graphics.newQuad 32 0 32 32 image-w image-h)
+		]
+	}
+))
 
 (var input [])
 
@@ -39,6 +48,7 @@
 			:puff-pressure 0
 
 			:sprite nil
+			:face-sprite nil
 
 			:animation {
 				:frames 0
@@ -58,15 +68,18 @@
 			)
 			
      	:load (fn load [self]
-     	          (set self.sprite
-     	                 (love.graphics.newImage "assets/player2.png"))
-     	          (set self.animation.frames 1)
+			(set self.sprite (love.graphics.newImage "assets/player2.png"))
+			(set self.animation.frames 1)
 
-     	          (let [width (self.sprite:getWidth)
-     	                height (self.sprite:getHeight)]
-     	          	
-			     	          (set self.animation.quad
-			     	          	(love.graphics.newQuad 0 0 (/ width 1) height width height))))
+			(let [width (self.sprite:getWidth) height (self.sprite:getHeight)]
+				(set self.animation.quad
+					(love.graphics.newQuad 0 0 (/ width 1) height width height)
+				)
+			)
+
+			(set self.face-sprite
+					(love.graphics.newImage "assets/player-faces.png"))
+		)
 
      	 :keyreleased (fn keyreleased [self key]
 
@@ -196,10 +209,21 @@
 				(love.graphics.setColor 1 1 1)
 			)
 
+			; draw the body
      	    (love.graphics.draw self.sprite self.animation.quad self.x self.y 
      	                        self.rotation 1 1
      	                        (/ (self.sprite:getWidth) 2) 
-     	                        (/ (self.sprite:getHeight) 2)))
+								(/ (self.sprite:getHeight) 2))
+
+			; draw the face
+			(local frames (. face-quads :neutral))
+			(local frame (+ 1 (% (math.floor (* self.game.i-time face-anim-fps)) (table.getn frames))))
+			(local frame (. frames frame))
+			(love.graphics.draw self.face-sprite frame self.x self.y 0 1 1
+				(/ (self.sprite:getWidth) 2)
+				(/ (self.sprite:getHeight) 2)
+			)
+		)
      })
      ; 	:draw (fn draw [self]
      ; 	    (love.graphics.draw self.sprite self.animation.quad self.x self.y 0 self.direction 1))
