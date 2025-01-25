@@ -44,11 +44,19 @@
       :effect nil
 
       :test-map (sti "assets/testmap.lua" "bump")
+
+      :puff-sfx nil
       
       :init (fn init [self]
             (set self.test (hero.make-player self 100 100))
 
             (set self.g-canvas (love.graphics.newCanvas self.internal-w self.internal-h))
+
+            (set self.puff-sfx [
+	            (love.audio.newSource "assets/3pops/pop1.ogg" "static")
+	            (love.audio.newSource "assets/3pops/pop2.ogg" "static")
+	            (love.audio.newSource "assets/3pops/pop3.ogg" "static")
+            ])
 
             (set self.effect (moonshine moonshine.effects.scanlines))
             ; ; (set self.effect (self.effect.chain moonshine.effects.desaturate))

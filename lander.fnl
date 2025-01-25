@@ -58,7 +58,11 @@
 			:bullets []
 			
 			:shoot (fn shoot [self dir]
-			           (table.insert self.bullets (bullet.make self.game self.x self.y self.rotation 500)))
+				(local puff-sound (lume.randomchoice game.puff-sfx))
+				(local puff-sound (puff-sound:clone))
+				(puff-sound:play)
+				(table.insert self.bullets (bullet.make self.game self.x self.y self.rotation 500))
+			)
 			:spawn-puff (fn spawn-puff [self]
 				(local speed 50)
 				(local rotation  (+ self.rotation (* math.pi 0.5) (lume.random -0.2 0.2)))
