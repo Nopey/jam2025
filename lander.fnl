@@ -46,7 +46,7 @@
 			:bullets tb
 			
 			:shoot (fn shoot [self dir]
-			           (table.insert self.bullets (bullet.make self.x self.y self.rotation 500)))
+			           (table.insert self.bullets (bullet.make self.game self.x self.y self.rotation 500)))
 			
      	:load (fn load [self]
      	          (set self.sprite

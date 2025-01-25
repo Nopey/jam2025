@@ -1,7 +1,9 @@
-(var bullet-radius 50)
+(var bullet-radius 30)
 
-(fn make-bullet [x y rotation speed] 
+(fn make-bullet [game x y rotation speed]
     {
+		:game game
+
 		;; center position
     	:position {
     		:x x
@@ -28,8 +30,8 @@
 			     	    (love.graphics.circle "fill" self.position.x self.position.y bullet-radius))
      
      :hit (fn hit [self]
-							(let [width (love.graphics.getWidth)
-								      height (love.graphics.getHeight)]
+							(let [width game.internal-w
+								      height game.internal-h]
 
 									(if (or (> self.position.x (+ bullet-radius width)) (< (+ self.position.x bullet-radius) 0))
 									    true
