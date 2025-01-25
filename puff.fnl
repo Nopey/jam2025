@@ -24,6 +24,8 @@
         :offx 0
         :offy 0
 
+        :deadline (+ (love.timer.getTime) (lume.random 5))
+
         ; HACK: loading this bubble every time we emit a puff.
         :sprite (love.graphics.newImage "assets/small-bubble-pop.png")
     })
@@ -42,11 +44,17 @@
         )
     )
     (fn puff.draw [self]
-        ; (love.graphics.circle "fill" (+ self.position.x self.offx) (+ self.position.y self.offy) radius)
-        (love.graphics.draw self.sprite (. sprite-quads 1) (+ self.position.x self.offx) (+ self.position.y self.offy))
+        (local ttl (- self.deadline (love.timer.getTime)))
+        (local quad (. sprite-quads (if
+            (> ttl 0.6) 1
+            (> ttl 0.3) 2
+            3
+        )))
+        (love.graphics.draw self.sprite quad (+ self.position.x self.offx) (+ self.position.y self.offy))
     )
     (fn puff.hit [self]
         (or
+            (> (love.timer.getTime) self.deadline)
             (> self.position.x (+ radius game.internal-w))
             (< (+ self.position.x radius) 0)
             (> self.position.y (+ radius game.internal-h))
