@@ -187,10 +187,13 @@
 				(local angle2 (* charge 2 math.pi))
 				(local segments (* charge 30))
 				(local arctype "open")
-  				(love.graphics.setColor (lume.color "#92e8c0")) ; bright greenish color from the palette
-				(love.graphics.setLineWidth 4)
+				(love.graphics.setColor (lume.color "#ffffff")) ; white for outline
+				(love.graphics.setLineWidth 6)
 				(love.graphics.arc "line" arctype self.x self.y charge-radius angle1 angle2 segments)
-  				(love.graphics.setColor 1 1 1)
+				(love.graphics.setColor (lume.color "#92e8c0")) ; bright greenish color from the palette
+				(love.graphics.setLineWidth 2)
+				(love.graphics.arc "line" arctype self.x self.y charge-radius angle1 angle2 segments)
+				(love.graphics.setColor 1 1 1)
 			)
 
      	    (love.graphics.draw self.sprite self.animation.quad self.x self.y 
