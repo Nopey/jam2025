@@ -43,7 +43,7 @@
 
       :effect nil
 
-      :test-map (sti "assets/testmap.lua")
+      :test-map (sti "assets/testmap.lua" "bump")
       
       :init (fn init [self]
             (set self.test (hero.make-player self 100 100))
