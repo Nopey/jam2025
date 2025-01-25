@@ -2,6 +2,7 @@
 (local enemy (require :enemy-spawner))
 (local lume (require :lib.lume))
 (local moonshine (require :lib.moonshine))
+(local sti (require :lib.sti))
 
 {
 
@@ -42,13 +43,15 @@
 
       :effect nil
 
+      :test-map (sti "assets/testmap.lua")
+      
       :init (fn init [self]
             (set self.test (hero.make-player self 100 100))
 
             (set self.g-canvas (love.graphics.newCanvas self.internal-w self.internal-h))
 
             (set self.effect (moonshine moonshine.effects.scanlines))
-            ; (set self.effect (self.effect.chain moonshine.effects.desaturate))
+            ; ; (set self.effect (self.effect.chain moonshine.effects.desaturate))
             (set self.effect (self.effect.chain moonshine.effects.boxblur))
             (set self.effect (self.effect.chain moonshine.effects.glow))
             (set self.effect (self.effect.chain moonshine.effects.chromasep))
@@ -80,6 +83,9 @@
     :update (fn update [self dt]
         (set self.i-time (+ self.i-time  (* 1.0 dt ) ))
         (set self.effect.scanlines.phase self.i-time)
+
+        (self.test-map:update dt)
+
         (self.test:update dt)
         (each [k bullet (pairs self.test.bullets)]
               (bullet:move dt)
@@ -91,8 +97,9 @@
     )
      :draw (fn draw [self]
 
-
       
+
+      	
         ; set the canvas we're rendering to
         ; (self.g-canvas:clear)
         ; (love.graphics.setCanvas self.g-canvas)
@@ -101,6 +108,13 @@
         (love.graphics.setStencilTest)
         ; (love.graphics.setBlendMode "alpha")
       
+
+      	; draw the map
+      	(self.test-map:draw)
+        (love.graphics.setCanvas {1 self.g-canvas :stencil true})
+
+        ; (love.graphics.setCanvas self.g-canvas)
+        
         ; (love.graphics.setShader self.crt-shader)
 
         ; send the shader the canvas
@@ -120,6 +134,9 @@
       	; (love.graphics.draw player.sprite player.x player.y))
 
       	
+      	
+
+
         ; (self.effect
       	(self.test:draw)
         ; )
@@ -163,6 +180,7 @@
                   #(love.graphics.draw self.g-canvas screen-x screen-y 0 scale)
             )
         )
+
     	)
 
       :getmouse (fn getmouse [self]
