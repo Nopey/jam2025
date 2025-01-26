@@ -13,12 +13,15 @@
 (local twinkle-quads {})
 (local twinkle-x 18)
 (local twinkle-y 60)
-(local twinkle-fps 1)
-(let [frame-w 32 frame-h 32 frame-count 2] (for [f 1 frame-count]
+(local twinkle-fps 0.5)
+(let [frame-w 32 frame-h 32 frame-count 4] (for [f 1 frame-count]
     (table.insert twinkle-quads
         (love.graphics.newQuad (* (- f 1) frame-w) 0 frame-w frame-h (* frame-w frame-count) frame-h)
     )
 ))
+(local twinkle-frame-remap [
+    3 4 1 2
+])
 
 (local menu {
     :g-canvas nil
@@ -68,8 +71,8 @@
     (love.graphics.setCanvas self.g-canvas)
     (love.graphics.draw self.sprite (. bg-quads self.anim-frame) 0 0)
     (when (= 1 self.anim-frame)
-        (local twinkle-frame (+ 1 (% (math.floor (* (love.timer.getTime) twinkle-fps)) (table.getn twinkle-quads))))
-        (love.graphics.draw self.twinkle-sprite (. twinkle-quads twinkle-frame) twinkle-x twinkle-y)
+        (local twinkle-frame (+ 1 (% (math.floor (* (love.timer.getTime) twinkle-fps)) (table.getn twinkle-frame-remap))))
+        (love.graphics.draw self.twinkle-sprite (. twinkle-quads (. twinkle-frame-remap twinkle-frame)) twinkle-x twinkle-y)
     )
     (when (> 1.6 (% (love.timer.getTime) 2))
         (love.graphics.print "press x" 200 200)

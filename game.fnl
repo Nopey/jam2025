@@ -5,6 +5,14 @@
 (local sti (require :lib.sti))
 (local bump (require :lib.bump))
 
+(local airsupplyline-quads {})
+(local airsupplyline-fps -3)
+(let [frame-w 32 frame-h 16 frame-count 4] (for [f 1 frame-count]
+    (table.insert airsupplyline-quads
+        (love.graphics.newQuad 0 (* (- f 1) frame-h) frame-w frame-h frame-w (* frame-h frame-count))
+    )
+))
+
 {
 
       
@@ -120,6 +128,7 @@
             (set self.sprites.airsupply_tank (love.graphics.newImage "assets/airsupply_tank.png"))
             (set self.sprites.airsupply_air (love.graphics.newImage "assets/airsupply_air.png"))
             (set self.sprites.airsupply_alarm (love.graphics.newImage "assets/airsupply_alarm.png"))
+            (set self.sprites.airsupply_line (love.graphics.newImage "assets/airsupply_line.png"))
 
               (self.test:load)
               ; ; testing wave generator
@@ -238,11 +247,22 @@
         (love.graphics.pop)
 
         ; draw airsupply ui
-        (local supply-x 280)
+        (local supply-x 270)
         (local supply-y 10)
         (local supply-w 32)
         (local supply-h 16)
         (local airsupply-amt (/ self.test.airsupply self.test.airsupply-max))
+
+        ; draw airsupply line first.
+        (local airsupplyline-frame (if
+            (< airsupply-amt 0) 1 ; out of gas!
+            (+ 2 (% (math.floor (* self.test.airsupply airsupplyline-fps)) 3))
+        ))
+        (love.graphics.draw self.sprites.airsupply_line (. airsupplyline-quads airsupplyline-frame)
+            (+ supply-x 29)
+            (+ supply-y 4)
+      )
+
         (love.graphics.draw self.sprites.airsupply_tank supply-x supply-y)
         (love.graphics.stencil (fn draw-airsupply-stencil []
             (love.graphics.rectangle "fill" (+ supply-x (* supply-w (- 1 airsupply-amt))) supply-y supply-w supply-h)

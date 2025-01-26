@@ -76,9 +76,9 @@
 			:rot-velocity 0
 			:drag-speed 10
 
-			:airsupply 50
-			:airsupply-max 80
-			:airsupply-alarmthreshold 2
+			:airsupply 8
+			:airsupply-max 10
+			:airsupply-alarmthreshold 3.5
 
 			; when did the player start charging?
 			:charge_time nil
@@ -229,6 +229,15 @@
 		)
 
 			:update (fn update [self dt]
+
+			; check if player has gone offscreen
+			(local offscreen-threshold 0)
+			(when (or
+					(> self.y (+ self.game.map-y game.internal-h offscreen-threshold))
+					(< (+ self.y offscreen-threshold) self.game.map-y)
+				)
+				(self.todo-die)
+			)
 
 			;; acceleration for player rotation
 				; decay old momentum
