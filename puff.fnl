@@ -7,9 +7,12 @@
     (love.graphics.newQuad 10 0 5 5 15 5)
 ])
 
-{:make (fn make [game x y vx vy]
+{:make (fn make [game x y vx vy kind]
     (local puff {
 		:game game
+
+        ; kind can be either :bubble or :dot
+        :kind kind
 
 		;; center position
     	:position {
@@ -24,7 +27,10 @@
         :offx 0
         :offy 0
 
-        :deadline (+ game.i-time (lume.random 1 3))
+        :deadline (case kind
+            :bubble (+ game.i-time (lume.random 1 3))
+            :dot (+ game.i-time (lume.random .4 .6))
+        )
 
         ; HACK: loading this bubble every time we emit a puff.
         :sprite (love.graphics.newImage "assets/small-bubble-pop.png")
@@ -44,6 +50,15 @@
         )
     )
     (fn puff.draw [self]
+        (case self.kind
+            :bubble (self:draw-bubble)
+            :dot (self:draw-dot)
+        )
+    )
+    (fn puff.draw-dot [self]
+        (love.graphics.rectangle "fill" (+ self.position.x self.offx) (+ self.position.y self.offy) 1 1)
+    )
+    (fn puff.draw-bubble [self]
         (local ttl (- self.deadline game.i-time))
         (local quad (. sprite-quads (if
             (> ttl 0.6) 1
