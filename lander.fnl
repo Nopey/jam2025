@@ -361,9 +361,13 @@
 							    ; (set move.velocity {:x 0 :y 0})
 					    )
 							
-							
-					
-						
+						; apply impact effects, damage
+						(local impact (lume.distance self.velocity.x self.velocity.y move.velocity.x move.velocity.y))
+						(when (> impact 0)
+							; TODO: apply damage, effects
+							(print "impact of strength " impact "!")
+						)
+
 						; apply move to player
 						(self:set-pos-from-collision goal-x goal-y)
 						(set self.velocity move.velocity)
