@@ -233,12 +233,12 @@
 			(when (and (= key "x") (not self.charge_time)) (set self.charge_time (game:gametime)))
 		)
 
-		:is-dead #$1.died-offscreen
+		:is-dead #$1.died-time
 
 		:update (fn update [self dt]
-			(if self.died-offscreen (do
+			(if self.died-time (do
 				(self:apply-emotion :blank 1)
-				(when (> (self.game:gametime) (+ 3 self.died-offscreen))
+				(when (> (self.game:gametime) (+ 3 self.died-time))
 					(local menu (require :menu))
 					(menu:init) ; HACK: resetting menu
 					(hump.gamestate.switch menu)
@@ -270,10 +270,7 @@
 				)
 
 				; player is offscreen, kill them.
-				; TODO: play face emotion for offscreen death
-				(self.game:apply-hitstun 0.3 0.5)
-				(self.game:apply-screenshake 0.2 5 10)
-				(set self.died-offscreen (self.game:gametime))
+				(self:die)
 			)
 
 			;; acceleration for player rotation
@@ -460,13 +457,19 @@
 						(when (> impact 0)
 							; TODO: apply more impact sound
 							(print "impact of strength " impact "!")
-							(if
-								(> impact 250) (self:apply-emotion :overwhelmed 2.5)
-								(> impact 100) (self:apply-emotion :overwhelmed 1)
-								(self:apply-emotion (lume.randomchoice [:surprised :!!]) 1)
-							)
 							(set self.damage (+ self.damage impact))
 							(self.game:apply-screenshake 0.2 (/ impact 100) 10)
+
+							(when (not (self:is-dead))
+								(if
+									(> impact 250) (self:apply-emotion :overwhelmed 2.5)
+									(> impact 100) (self:apply-emotion :overwhelmed 1)
+									(self:apply-emotion (lume.randomchoice [:surprised :!!]) 1)
+								)
+								(when (> self.damage self.damage-max)
+									(self:die)
+								)
+							)
 						)
 
 						; apply move to player
@@ -533,6 +536,11 @@
 				(/ (self.sprite:getWidth) 2)
 				(/ (self.sprite:getHeight) 2)
 			)
+		)
+		:die (fn die [self]
+			(self.game:apply-hitstun 0.3 0.5)
+			(self.game:apply-screenshake 0.2 5 10)
+			(set self.died-time (self.game:gametime))
 		)
 
 		:apply-emotion (fn apply-emotion [self emotion duration]
