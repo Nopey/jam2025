@@ -217,23 +217,13 @@
 
 					(set self.airsupply (- self.airsupply dt))
 	  	        )
-			  	    
-
-						; if player isn't moving left or right
-						(if (not (love.keyboard.isDown "z"))
-				   		(set move.velocity.x 
-				   		     (if (> (math.abs move.velocity.x) 1) 
-				   		         (- move.velocity.x (* dt self.drag-speed (lume.sign move.velocity.x)))
-				   		         0)))
-
-						; if player isn't moving left or right
-						(if (not (love.keyboard.isDown "z")) 
-				   		(set move.velocity.y 
-				   		     (if (> (math.abs move.velocity.y) 1) 
-				   		         (- move.velocity.y (* dt self.drag-speed (lume.sign move.velocity.y)))
-				   		         0)))
-			            	
-
+						; apply drag to velocity
+						(local vel-speed (lume.distance 0 0 move.velocity.x move.velocity.y))
+						(when (and (> vel-speed 0) (not (love.keyboard.isDown "z")))
+							(local new-speed (linear_movetowards vel-speed 0 (* dt self.drag-speed)))
+							(set move.velocity.x (* move.velocity.x (/ new-speed vel-speed)))
+							(set move.velocity.y (* move.velocity.y (/ new-speed vel-speed)))
+						)
 
 				    ; set bounds on y-axis acceleration
 						(if (> move.velocity.y self.max-velocity)
