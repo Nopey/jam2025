@@ -237,8 +237,8 @@
 						
 						; do collision check and resolution
 						(let [ (actual-x actual-y cols len)
-						       (self.game.world:check self (- move.x (/ self.width  1)) 
-						                              		 (- move.y (/ self.height 1)))] 
+						       (self.game.world:check self move.x  
+						                              		 move.y )] 
 							; (print "acual-x: " actual-x)
 							; (print "acual-y: " actual-y)
 							; (print "cols: "    cols)
@@ -246,6 +246,9 @@
 
 							(when (> len 0)
 							    (print "an actual collision occurred!")
+									(print "move.x: " move.x)
+									(print "move.y: " move.y)
+									(print "move.velocity: " move.velocity.x " " move.velocity.y)
 									(print "acual-x: " actual-x)
 									(print "acual-y: " actual-y)
 							    (set move.x actual-x)
@@ -260,6 +263,7 @@
 						(set self.x move.x)
 						(set self.y move.y)
 						(set self.velocity move.velocity)
+						(self.game.world:update self self.x self.y)
      	)
     )
 
