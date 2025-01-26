@@ -118,6 +118,13 @@
 				(table.insert self.bullets (puff.make self.game x y vx vy :dot))
 			)
 
+
+			:get-collision-pos-offset (fn get-collision-pos-offset [self]
+			     (values 
+				  	 (- self.x (/ self.width 2)) 
+				  	 (- self.y (/ self.height 2))))
+
+
      	:load (fn load [self]
 			(set self.sprite (love.graphics.newImage "assets/player2.png"))
 			(set self.animation.frames 1)
@@ -263,18 +270,17 @@
 						; (set move.y (- move.y (/ self.height 2)))
 						
 						; do collision check and resolution
-						(let [ (actual-x actual-y cols len)
-						       (self.game.world:check self move.x  
-						                              		 move.y )] 
-							; (print "acual-x: " actual-x)
-							; (print "acual-y: " actual-y)
-							; (print "cols: "    cols)
-							; (print "len: "     len)
+						(let [ (x y) (self:get-collision-pos-offset)
+						       
+						       (actual-x actual-y cols len)
+						       (self.game.world:check self x y )] 
 
 							(when (> len 0)
 							    (print "an actual collision occurred!")
 									(print "move.x: " move.x)
 									(print "move.y: " move.y)
+									(print "move.x: " x)
+									(print "move.y: " y)
 									(print "move.velocity: " move.velocity.x " " move.velocity.y)
 									(print "acual-x: " actual-x)
 									(print "acual-y: " actual-y)
@@ -290,7 +296,9 @@
 						(set self.x move.x)
 						(set self.y move.y)
 						(set self.velocity move.velocity)
-						(self.game.world:update self self.x self.y)
+						(let [ (x y) (self:get-collision-pos-offset) ]
+							(self.game.world:update self x y))
+
      	)
     )
 
