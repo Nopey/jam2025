@@ -131,6 +131,29 @@
 				(table.insert self.bullets (puff.make self.game x y vx vy :dot))
 			)
 
+			;; spawn exhaust from the side thrusters
+			:spawn-puff-spark (fn spawn-puff-spark [self normalx normaly]
+				(local parentspeed 0.5) ; how much parent velocity to add to the spark
+				(local speed 30) ; how much random velocity to add to the spark
+				(local normalspeed 30) ; velocity along normal to add to the spark
+				(local tanspeed 40) ; random tangent velocity to add to spark
+				(local vx (+
+					(* parentspeed self.velocity.x)
+					(lume.random (- speed) speed)
+					(* normalx normalspeed) ; normal
+					(* normaly (lume.random (- tanspeed) tanspeed)) ; tangent
+				))
+				(local vy (+
+					(* parentspeed self.velocity.y)
+					(lume.random (- speed) speed)
+					(* normaly normalspeed) ; normal
+					(* normalx (lume.random (- tanspeed) tanspeed)) ; tangent
+				))
+				(local surf-dist -5)
+				(local x (+ self.x (* normalx surf-dist)))
+				(local y (+ self.y (* normaly surf-dist)))
+				(table.insert self.bullets (puff.make self.game x y vx vy :spark))
+			)
 
 			; BUMP world collision filter: react differently to different collision objects
 		  :collision-filter (fn collision-filter [item other]
@@ -329,7 +352,17 @@
 													(print "acual-x: " actual-x)
 													(print "acual-y: " actual-y)
 													(print "col.normal.x: " col.normal.x " col.normal.y: " col.normal.y)
-						
+
+												; emit sparks
+												(var spark-pressure (math.abs (+
+													; inline dot product how do lua programmers live like this
+													(* col.normal.x move.velocity.x)
+													(* col.normal.y move.velocity.y)
+												)))
+												(while (> spark-pressure 0)
+													(self:spawn-puff-spark col.normal.x col.normal.y)
+													(set spark-pressure (- spark-pressure (lume.random 3 8)))
+												)
 
 											    ; resolve the actual overlap of the collision
 											    
@@ -372,11 +405,11 @@
 							    ; (set move.y actual-y)
 							    ; (set move.velocity {:x 0 :y 0})
 					    )
-							
+
 						; apply impact effects, damage
 						(local impact (lume.distance self.velocity.x self.velocity.y move.velocity.x move.velocity.y))
 						(when (> impact 0)
-							; TODO: apply damage, effects
+							; TODO: apply more effects (sparks, sound..)
 							(print "impact of strength " impact "!")
 							(set self.damage (+ self.damage impact))
 							(self.game:apply-screenshake 0.2 (/ impact 100) 10)
