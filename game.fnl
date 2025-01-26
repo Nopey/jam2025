@@ -53,19 +53,52 @@
       
       :test-map nil
 
+      :map-x 0
+      :map-y 0
+      :map-scroll-speed 0.025
+
+
       :puff-sfx nil
       
       :init (fn init [self]
-            (set self.test (hero.make-player self 100 100))
+            ; (set self.test (hero.make-player self 100 100))
 
             
             (set self.world (bump.newWorld 32))
             (set self.test-map (sti "assets/maps/map1.lua" ["bump"]))
             (self.test-map:bump_init self.world)
-            (self.world:add self.test (self.test:get-collision-x) (self.test:get-collision-y) self.test.width self.test.height)
 
             (print "items in world: " (self.world:getItems))
 
+            ; fish out spawn locations from the Spawn Locations layer, then delete it from the bump world (useless)
+
+            ; (each [key value (pairs self.test-map.layers)]
+            ;       (print "key: " key " value: " value))
+
+
+            (each [ key value (pairs self.test-map.layers.spawn-location) ]
+                  (print "key: " key " value: " value))
+
+
+            ; (set self.map-x self.test-map.tilewidth)
+            (set self.map-y (* (- self.test-map.height 15) self.test-map.tileheight))
+
+
+            
+            (each [ _ object (pairs self.test-map.layers.spawn-location.objects) ]
+                        (print object)
+                        (when (= object.name "Player")
+                              (set self.test (hero.make-player self object.x object.y))
+                              (self.world:add self.test (self.test:get-collision-x) 
+                                              (self.test:get-collision-y) 
+                                              self.test.width self.test.height)
+                        )
+                       )
+                  
+
+            ; (. self.world.layers "Spawn Locations")
+            
+            
             (set self.g-canvas (love.graphics.newCanvas self.internal-w self.internal-h))
 
             (set self.puff-sfx [
@@ -128,6 +161,7 @@
       (local camera-x 0)
       (local camera-y (* 100 (math.sin (* 0.1 (love.timer.getTime)))))
 
+      (set self.map-y (- self.map-y self.map-scroll-speed ) )
         ; set the canvas we're rendering to
         ; (self.g-canvas:clear)
         ; (love.graphics.setCanvas self.g-canvas)
@@ -138,11 +172,11 @@
       
 
         ; draw the map
-        (self.test-map:draw  (- camera-x) (- camera-y))
+        (self.test-map:draw  (- self.map-x) (- self.map-y))
         (love.graphics.setCanvas {1 self.g-canvas :stencil true})
 
         (love.graphics.push)
-        (love.graphics.translate (- camera-x) (- camera-y))
+        (love.graphics.translate (- self.map-x) (- self.map-y))
 
         ; (love.graphics.setCanvas self.g-canvas)
         

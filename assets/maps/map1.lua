@@ -9,8 +9,8 @@ return {
   height = 96,
   tilewidth = 16,
   tileheight = 16,
-  nextlayerid = 8,
-  nextobjectid = 21,
+  nextlayerid = 9,
+  nextobjectid = 23,
   properties = {},
   tilesets = {
     {
@@ -7783,7 +7783,7 @@ return {
       width = 16,
       height = 96,
       id = 1,
-      name = "background water",
+      name = "background-water",
       class = "",
       visible = true,
       opacity = 1,
@@ -7803,7 +7803,7 @@ return {
       width = 16,
       height = 96,
       id = 7,
-      name = "foreground water",
+      name = "foreground-water",
       class = "",
       visible = true,
       opacity = 1,
@@ -7867,6 +7867,36 @@ return {
           properties = {
             ["collidable"] = true
           }
+        }
+      }
+    },
+    {
+      type = "objectgroup",
+      draworder = "topdown",
+      id = 8,
+      name = "spawn-location",
+      class = "",
+      visible = true,
+      opacity = 1,
+      offsetx = 0,
+      offsety = 0,
+      parallaxx = 1,
+      parallaxy = 1,
+      properties = {},
+      objects = {
+        {
+          id = 22,
+          name = "Player",
+          type = "",
+          shape = "rectangle",
+          x = 112,
+          y = 1456,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 1239,
+          visible = true,
+          properties = {}
         }
       }
     }
