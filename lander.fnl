@@ -379,6 +379,7 @@
 							; TODO: apply damage, effects
 							(print "impact of strength " impact "!")
 							(set self.damage (+ self.damage impact))
+							(self.game:apply-screenshake 0.2 (/ impact 100) 10)
 						)
 
 						; apply move to player
