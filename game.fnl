@@ -130,6 +130,7 @@
             (set self.sprites.airsupply_alarm (love.graphics.newImage "assets/airsupply_alarm.png"))
             (set self.sprites.airsupply_line (love.graphics.newImage "assets/airsupply_line.png"))
             (set self.sprites.youdied (love.graphics.newImage "assets/youdied.png"))
+            (set self.sprites.dumboverlay (love.graphics.newImage "assets/dumboverlay.png"))
 
               (self.test:load)
               ; ; testing wave generator
@@ -279,6 +280,8 @@
             )
             (love.graphics.draw self.sprites.airsupply_alarm supply-x supply-y)
         )
+
+      (love.graphics.draw self.sprites.dumboverlay 0 0) ; dumb overlay to make top and bottom of screen look more dangeruos1!!
 
         ; draw youdied overlay
         (when (self.test:is-dead)
