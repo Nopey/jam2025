@@ -6644,7 +6644,7 @@ return {
       id = 1,
       name = "Tile Layer 1",
       class = "",
-      visible = false,
+      visible = true,
       opacity = 1,
       offsetx = 0,
       offsety = 0,
@@ -6676,38 +6676,6 @@ return {
       encoding = "base64",
       compression = "zlib",
       data = "eJzrYGBgqELC1TjY2HAbELczoIKpSOxpDPhBOxb9yGASEE+E2kOOfmxuIkc/LjCQ+juAuJNM/a1APIVC+xlG9Q8K/aA8gi+P4sOgNAAA6OEjXw=="
-    },
-    {
-      type = "objectgroup",
-      draworder = "topdown",
-      id = 6,
-      name = "collision layer",
-      class = "",
-      visible = true,
-      opacity = 1,
-      offsetx = 0,
-      offsety = 0,
-      parallaxx = 1,
-      parallaxy = 1,
-      tintcolor = { 255, 255, 255 },
-      properties = {
-        ["collidable"] = true
-      },
-      objects = {
-        {
-          id = 17,
-          name = "collisionbox",
-          type = "",
-          shape = "rectangle",
-          x = 0,
-          y = 0,
-          width = 16,
-          height = 16,
-          rotation = 0,
-          visible = true,
-          properties = {}
-        }
-      }
     },
     {
       type = "objectgroup",

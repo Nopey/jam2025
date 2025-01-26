@@ -1721,7 +1721,7 @@
    </wangset>
   </wangsets>
  </tileset>
- <layer id="1" name="Tile Layer 1" width="16" height="16" visible="0">
+ <layer id="1" name="Tile Layer 1" width="16" height="16">
   <data encoding="base64" compression="zlib">
    eJwTY2BgEBvFo3gUj0gMADKUFgE=
   </data>
@@ -1734,12 +1734,6 @@
    eJzrYGBgqELC1TjY2HAbELczoIKpSOxpDPhBOxb9yGASEE+E2kOOfmxuIkc/LjCQ+juAuJNM/a1APIVC+xlG9Q8K/aA8gi+P4sOgNAAA6OEjXw==
   </data>
  </layer>
- <objectgroup color="#ffffff" id="6" name="collision layer" tintcolor="#ffffff">
-  <properties>
-   <property name="collidable" type="bool" value="true"/>
-  </properties>
-  <object id="17" name="collisionbox" x="0" y="0" width="16" height="16"/>
- </objectgroup>
  <objectgroup id="5" name="test">
   <object id="2" gid="292" x="169.25" y="89.5" width="16" height="16">
    <properties>

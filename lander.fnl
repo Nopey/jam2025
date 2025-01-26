@@ -51,6 +51,9 @@
      	:y start-y
      	:speed 50
 
+			:width 32
+			:height 32
+     	
 		:use-mouse-controls false
 
      	:direction 1
@@ -227,16 +230,28 @@
 				   		(set move.direction -1))
 
 
-						; do collision check and resolution
+						; adjust move positioning to center BUMP world bounding box on player
 
-						(let [ (actual-x actual-y cols len) (self.game.world:check self move.x move.y)] 
+						; (set move.x (- move.x (/ self.width 2)))
+						; (set move.y (- move.y (/ self.height 2)))
+						
+						; do collision check and resolution
+						(let [ (actual-x actual-y cols len)
+						       (self.game.world:check self (- move.x (/ self.width  1)) 
+						                              		 (- move.y (/ self.height 1)))] 
 							; (print "acual-x: " actual-x)
-							; (print "acual-x: " actual-y)
+							; (print "acual-y: " actual-y)
 							; (print "cols: "    cols)
 							; (print "len: "     len)
 
-							(if (> len 0)
-							    (print "an actual collision occurred!"))
+							(when (> len 0)
+							    (print "an actual collision occurred!")
+									(print "acual-x: " actual-x)
+									(print "acual-y: " actual-y)
+							    (set move.x actual-x)
+							    (set move.y actual-y)
+							    (set move.velocity {:x 0 :y 0})
+					    )
 							
 							)
 					
@@ -276,7 +291,7 @@
      	    (love.graphics.draw self.sprite self.animation.quad self.x self.y 
      	                        self.rotation 1 1
      	                        (/ (self.sprite:getWidth) 2) 
-								(/ (self.sprite:getHeight) 2))
+															(/ (self.sprite:getHeight) 2))
 
 			; draw the face
 			(local emotion :awake)
