@@ -3,7 +3,7 @@
 (local hump (require :lib.hump))
 
 (local bg-quads {})
-(let [frame-w 320 frame-h 240 frame-count 6] (for [f 1 6]
+(let [frame-w 320 frame-h 240 frame-count 6] (for [f 1 frame-count]
     (table.insert bg-quads
         (love.graphics.newQuad (* (- f 1) frame-w) 0 frame-w frame-h (* frame-w frame-count) frame-h)
     )

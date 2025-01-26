@@ -21,7 +21,7 @@
 	:surprised 5
 	:-w- 1
 })
-(local face-quads (let [image-w 160 image-h 32]
+(local face-quads (let [image-w (* 32 5) image-h 32]
 	[
 		(love.graphics.newQuad   0 0 32 32 image-w image-h)
 		(love.graphics.newQuad  32 0 32 32 image-w image-h)
@@ -29,6 +29,13 @@
 		(love.graphics.newQuad  96 0 32 32 image-w image-h)
 		(love.graphics.newQuad 128 0 32 32 image-w image-h)
 	]
+))
+
+(local damage-quads {})
+(let [frame-w 32 frame-h 32 frame-count 5] (for [f 1 frame-count]
+    (table.insert damage-quads
+        (love.graphics.newQuad (* (- f 1) frame-w) 0 frame-w frame-h (* frame-w frame-count) frame-h)
+    )
 ))
 
 (var input [])
@@ -81,7 +88,8 @@
 			:puff-side-pressure 0
 
 			:sprite nil
-			:face-sprite nil
+			:face-sprites nil
+			:damage-sprite nil
 
 			:animation {
 				:frames 0
@@ -157,6 +165,7 @@
 
      	:load (fn load [self]
 			(set self.sprite (love.graphics.newImage "assets/player2.png"))
+			(set self.damage-sprite (love.graphics.newImage "assets/faces/face-damage.png"))
 			(set self.animation.frames 1)
 
 			(let [width (self.sprite:getWidth) height (self.sprite:getHeight)]
@@ -406,6 +415,11 @@
      	                        self.rotation 1 1
      	                        (/ (self.sprite:getWidth) 2) 
 															(/ (self.sprite:getHeight) 2))
+
+			; draw the damage
+			(love.graphics.draw self.damage-sprite (. damage-quads 3) self.x self.y
+								self.rotation 1 1
+								(/ (self.sprite:getWidth) 2) (/ (self.sprite:getHeight) 2))
 
 			; draw the face
 			(local emotion :awake)
