@@ -124,10 +124,10 @@
 
     )
      :draw (fn draw [self]
+     
+      (local camera-x 0)
+      (local camera-y (* 100 (math.sin (* 0.1 (love.timer.getTime)))))
 
-      
-
-      	
         ; set the canvas we're rendering to
         ; (self.g-canvas:clear)
         ; (love.graphics.setCanvas self.g-canvas)
@@ -137,9 +137,12 @@
         ; (love.graphics.setBlendMode "alpha")
       
 
-      	; draw the map
-      	(self.test-map:draw)
+        ; draw the map
+        (self.test-map:draw  (- camera-x) (- camera-y))
         (love.graphics.setCanvas {1 self.g-canvas :stencil true})
+
+        (love.graphics.push)
+        (love.graphics.translate (- camera-x) (- camera-y))
 
         ; (love.graphics.setCanvas self.g-canvas)
         
@@ -161,13 +164,13 @@
       	; (love.graphics.print "Hello from Fennel!" player.x player.y))
       	; (love.graphics.draw player.sprite player.x player.y))
 
-      	
-      	
+            (self.test:draw)
 
+            (when self.draw_wireframe
+                  (self.test-map:bump_draw 0 0 1 1)
+            )
 
-        ; (self.effect
-      	(self.test:draw)
-        ; )
+        (love.graphics.pop)
 
         ; draw airsupply ui
         (local supply-x 280)
@@ -190,11 +193,6 @@
             )
             (love.graphics.draw self.sprites.airsupply_alarm supply-x supply-y)
         )
-
-               
-      (when self.draw_wireframe
-            (self.test-map:bump_draw 0 0 1 1)
-      )
 
         (love.graphics.setCanvas)
         (do
