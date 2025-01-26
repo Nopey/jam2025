@@ -97,7 +97,7 @@
               (if (bullet:hit)
                   (do 
                     (table.remove self.test.bullets k)
-                    (print "removing bullet!")
+                    ;(print "removing bullet!")
                   )))
     )
      :draw (fn draw [self]

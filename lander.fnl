@@ -17,6 +17,17 @@
 
 (var input [])
 
+(fn linear_movetowards [from to max_delta]
+    (local delta (- to from))
+    (local delta_sign (if (> delta 0) 1 -1))
+    (if
+        (> (math.abs delta) max_delta)
+            (+ (* delta_sign max_delta) from)
+        to
+    )
+)
+
+
 (fn make-player [game start-x start-y]  
     {
 		:game game
@@ -32,7 +43,7 @@
 			
       ; radians
 			:rotation 0
-			:rot-speed 1.5
+			:rot-velocity 0
 			:drag-speed 10
 
 			:airsupply 5
@@ -108,26 +119,28 @@
 
 			:update (fn update [self dt]
 
-			  (let [move {:x 0 :y 0}]
-
-			  	; gravity
-			  	; (set self.velocity.y (+ self.velocity.y (* dt 350)))
-
-			  	    
-
-			    (if 
+				(local rot-decay (math.exp (* -1.8 dt)))
+				(local rot-lineardecay 0.1)
+				(var target_rot_speed (linear_movetowards (* self.rot-velocity rot-decay) 0 (* dt rot-lineardecay)))
+			    (if
 					(love.keyboard.isDown "right") (do
-						(set self.rotation (angle.normalize (+ self.rotation (* dt self.rot-speed))))
+						(set target_rot_speed 999)
 					)
 					(love.keyboard.isDown "left") (do
-						(set self.rotation (angle.normalize (- self.rotation (* dt self.rot-speed))))
+						(set target_rot_speed -999)
 					)
 					self.use-mouse-controls (do
 						(local [mousex mousey] (self.game:getmouse))
 						(local target_angle (lume.angle self.x self.y mousex mousey))
-						(set self.rotation (angle.movetowards self.rotation target_angle (* dt self.rot-speed)))
+						(local mouse-control-sensitivity 10)
+						(set target_rot_speed (* mouse-control-sensitivity (- target_angle self.rotation (* -0.5 math.pi))))
 					)
 				)
+				(local rot-acceleration 25)
+				(local max-rot-speed 2.5)
+				(set target_rot_speed (lume.clamp target_rot_speed (- max-rot-speed) max-rot-speed))
+				(set self.rot-velocity (linear_movetowards self.rot-velocity target_rot_speed (* dt rot-acceleration)))
+				(set self.rotation (+ self.rotation (* dt self.rot-velocity)))
 
 			(when (and (love.keyboard.isDown "z") (>= self.airsupply 0))
   	        	(let [vx (math.cos (- self.rotation (/ math.pi 2)) )
@@ -186,7 +199,6 @@
 
 					(if (< self.velocity.x -1)
 			   		(set self.direction -1))
-		    )
      	)
 
 
