@@ -10,12 +10,23 @@
 ))
 (local anim-fps 14)
 
+(local twinkle-quads {})
+(local twinkle-x 18)
+(local twinkle-y 60)
+(local twinkle-fps 1)
+(let [frame-w 32 frame-h 32 frame-count 2] (for [f 1 frame-count]
+    (table.insert twinkle-quads
+        (love.graphics.newQuad (* (- f 1) frame-w) 0 frame-w frame-h (* frame-w frame-count) frame-h)
+    )
+))
+
 (local menu {
     :g-canvas nil
     :internal-w 320
     :internal-h 240
     :effect nil
     :sprite nil
+    :twinkle-sprite nil
 
     :anim-start nil ; time at which animation was started
     :anim-frame nil
@@ -50,11 +61,16 @@
     (love.graphics.setDefaultFilter :nearest)
 
     (set self.sprite (love.graphics.newImage "assets/title screen 4.png"))
+    (set self.twinkle-sprite (love.graphics.newImage "assets/twinklestar.png"))
 )
 (fn menu.draw [self]
     ;; offscreen draw
     (love.graphics.setCanvas self.g-canvas)
     (love.graphics.draw self.sprite (. bg-quads self.anim-frame) 0 0)
+    (when (= 1 self.anim-frame)
+        (local twinkle-frame (+ 1 (% (math.floor (* (love.timer.getTime) twinkle-fps)) (table.getn twinkle-quads))))
+        (love.graphics.draw self.twinkle-sprite (. twinkle-quads twinkle-frame) twinkle-x twinkle-y)
+    )
     (when (> 1.6 (% (love.timer.getTime) 2))
         (love.graphics.print "press x" 200 200)
     )
