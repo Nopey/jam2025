@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="16" height="96" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="60">
+<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="16" height="96" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="68">
  <editorsettings>
   <export target="map1.lua" format="lua"/>
  </editorsettings>
@@ -260,9 +260,6 @@
    </objectgroup>
   </tile>
   <tile id="156">
-   <objectgroup draworder="index" id="3">
-    <object id="5" x="0" y="0" width="16" height="16"/>
-   </objectgroup>
    <animation>
     <frame tileid="156" duration="150"/>
     <frame tileid="157" duration="150"/>
@@ -330,22 +327,20 @@
    eJztWF0PgzAI5Hf7sDdd9W1f/l5pIpkyl9VhcqA2ITbqFVru2oZERDe2Sj2lX6lvU2vYevq/XcH4fhzDgkfP3xp/dDwy/1usvzV+NH/Q+j39Y/1b9ROZv2i8df5o/qH5gz5/0Pz3oB/k/WEP/I+8/6L9e+BfdP1G5g96/ujzB71/etB/ZP8e+HPk+NH5/6afRPN6ndTzmgX/Ov6MfbB16n3N1rJdfuDv9FlDlP6zMP7Shs7/FvnLayq11NKWRkxL7/V/rcDLv+f9xad+1+BFb7p+r7W/VN/PehwAmmuIbw==
   </data>
  </layer>
- <objectgroup id="5" name="dangers" offsetx="23.6989" offsety="30.2614">
+ <objectgroup color="#ff0004" id="5" name="dangers" offsetx="23.6989" offsety="30.2614">
   <properties>
    <property name="collidable" type="bool" value="true"/>
   </properties>
  </objectgroup>
- <objectgroup id="9" name="whirlpools">
-  <object id="57" gid="157" x="176" y="1408" width="16" height="16">
-   <properties>
-    <property name="collidable" type="bool" value="true"/>
-   </properties>
-  </object>
-  <object id="58" gid="157" x="80" y="1408" width="16" height="16">
-   <properties>
-    <property name="collidable" type="bool" value="true"/>
-   </properties>
-  </object>
+ <objectgroup color="#ff0000" id="9" name="whirlpools">
+  <object id="60" gid="157" x="160" y="1472" width="16" height="16"/>
+  <object id="61" gid="157" x="112" y="1472" width="16" height="16"/>
+  <object id="62" gid="157" x="80" y="1472" width="16" height="16"/>
+  <object id="63" gid="158" x="144" y="1360" width="16" height="16"/>
+  <object id="64" gid="158" x="80" y="1360" width="16" height="16"/>
+  <object id="65" gid="161" x="64" y="1520" width="16" height="16"/>
+  <object id="66" gid="161" x="160" y="1520" width="16" height="16"/>
+  <object id="67" gid="161" x="208" y="1520" width="16" height="16"/>
  </objectgroup>
  <objectgroup id="8" name="spawn-location">
   <object id="59" name="Player" gid="159" x="112" y="1488" width="16" height="16"/>

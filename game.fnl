@@ -56,7 +56,7 @@
       :map-x 0
       :map-y 0
       :map-scroll-speed 0.05
-      :map-scroll-enabled true
+      :map-scroll-enabled false
 
 
       :puff-sfx nil

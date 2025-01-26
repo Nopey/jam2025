@@ -10,7 +10,7 @@ return {
   tilewidth = 16,
   tileheight = 16,
   nextlayerid = 10,
-  nextobjectid = 60,
+  nextobjectid = 68,
   properties = {},
   tilesets = {
     {
@@ -1041,35 +1041,6 @@ return {
         },
         {
           id = 156,
-          objectGroup = {
-            type = "objectgroup",
-            draworder = "index",
-            id = 3,
-            name = "",
-            class = "",
-            visible = true,
-            opacity = 1,
-            offsetx = 0,
-            offsety = 0,
-            parallaxx = 1,
-            parallaxy = 1,
-            properties = {},
-            objects = {
-              {
-                id = 5,
-                name = "",
-                type = "",
-                shape = "rectangle",
-                x = 0,
-                y = 0,
-                width = 16,
-                height = 16,
-                rotation = 0,
-                visible = true,
-                properties = {}
-              }
-            }
-          },
           animation = {
             {
               tileid = 156,
@@ -1237,36 +1208,116 @@ return {
       properties = {},
       objects = {
         {
-          id = 57,
+          id = 60,
           name = "",
           type = "",
           shape = "rectangle",
-          x = 176,
-          y = 1408,
+          x = 160,
+          y = 1472,
           width = 16,
           height = 16,
           rotation = 0,
           gid = 157,
           visible = true,
-          properties = {
-            ["collidable"] = true
-          }
+          properties = {}
         },
         {
-          id = 58,
+          id = 61,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 112,
+          y = 1472,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 157,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 62,
           name = "",
           type = "",
           shape = "rectangle",
           x = 80,
-          y = 1408,
+          y = 1472,
           width = 16,
           height = 16,
           rotation = 0,
           gid = 157,
           visible = true,
-          properties = {
-            ["collidable"] = true
-          }
+          properties = {}
+        },
+        {
+          id = 63,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 144,
+          y = 1360,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 158,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 64,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 80,
+          y = 1360,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 158,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 65,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 64,
+          y = 1520,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 161,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 66,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 160,
+          y = 1520,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 161,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 67,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 208,
+          y = 1520,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 161,
+          visible = true,
+          properties = {}
         }
       }
     },
