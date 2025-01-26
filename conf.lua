@@ -8,6 +8,7 @@ love.conf = function(t)
    t.window.width = 1366
    t.window.height = 1025
    t.window.resizable = true
+   t.window.fullscreen = true
    t.window.vsync = true
    t.version = "11.5"
 end
