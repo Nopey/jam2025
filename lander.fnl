@@ -57,7 +57,7 @@
      	:x start-x
      	:y start-y
 		:speed 120 ; forwards acceleration
-		:max-velocity 1000
+		:max-velocity 5000
 
 		; rectangular collider
 		; NOTE: this is set smaller than one might expect because the walls' collision is oversize, and also
@@ -90,6 +90,9 @@
 			:sprite nil
 			:face-sprites nil
 			:damage-sprite nil
+
+			:damage 0
+			:damage-max 1000
 
 			:animation {
 				:frames 0
@@ -165,7 +168,7 @@
 
      	:load (fn load [self]
 			(set self.sprite (love.graphics.newImage "assets/player2.png"))
-			(set self.damage-sprite (love.graphics.newImage "assets/faces/face-damage.png"))
+			(set self.damage-sprite (love.graphics.newImage "assets/faces/subtle-cracking.png"))
 			(set self.animation.frames 1)
 
 			(let [width (self.sprite:getWidth) height (self.sprite:getHeight)]
@@ -375,6 +378,7 @@
 						(when (> impact 0)
 							; TODO: apply damage, effects
 							(print "impact of strength " impact "!")
+							(set self.damage (+ self.damage impact))
 						)
 
 						; apply move to player
@@ -416,10 +420,14 @@
      	                        (/ (self.sprite:getWidth) 2) 
 															(/ (self.sprite:getHeight) 2))
 
-			; draw the damage
-			(love.graphics.draw self.damage-sprite (. damage-quads 3) self.x self.y
-								self.rotation 1 1
-								(/ (self.sprite:getWidth) 2) (/ (self.sprite:getHeight) 2))
+			(when (> self.damage 0)
+				; draw the damage
+				(local damage-idx (math.floor (* (/ self.damage self.damage-max) (table.getn damage-quads))))
+				(local damage-idx (lume.clamp damage-idx 1 (table.getn damage-quads)))
+				(love.graphics.draw self.damage-sprite (. damage-quads damage-idx) self.x self.y
+									self.rotation 1 1
+									(/ (self.sprite:getWidth) 2) (/ (self.sprite:getHeight) 2))
+			)
 
 			; draw the face
 			(local emotion :awake)
