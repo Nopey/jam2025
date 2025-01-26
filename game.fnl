@@ -61,7 +61,7 @@
             (set self.world (bump.newWorld 32))
             (set self.test-map (sti "assets/maps/map1.lua" ["bump"]))
             (self.test-map:bump_init self.world)
-            (self.world:add self.test 100 100 32 32)
+            (self.world:add self.test (self.test:get-collision-x) (self.test:get-collision-y) self.test.width self.test.height)
 
             (print "items in world: " (self.world:getItems))
 
@@ -112,7 +112,6 @@
         (self.test-map:update dt)
 
         (self.test:update dt)
-        (self.world:move self.test self.test.x self.test.y)
         
         (each [k bullet (pairs self.test.bullets)]
               (bullet:move dt)

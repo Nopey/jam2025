@@ -65,8 +65,8 @@
 			:rot-velocity 0
 			:drag-speed 10
 
-			:airsupply 5
-			:airsupply-max 8
+			:airsupply 50
+			:airsupply-max 80
 			:airsupply-alarmthreshold 2
 
 			:max-velocity 100
@@ -119,10 +119,20 @@
 			)
 
 
-			:get-collision-pos-offset (fn get-collision-pos-offset [self]
+			:get-collision-pos (fn get-collision-pos [self]
 			     (values 
 				  	 (- self.x (/ self.width 2)) 
 				  	 (- self.y (/ self.height 2))))
+			:get-collision-x (fn get-collision-x [self]
+				(- self.x (/ self.width 2))
+			)
+			:get-collision-y (fn get-collision-y [self]
+				(- self.y (/ self.width 2))
+			)
+			:set-pos-from-collision (fn set-pos-from-collision [self x y]
+				(set self.x (+ x (/ self.width 2)))
+				(set self.y (+ y (/ self.width 2)))
+			)
 
 
      	:load (fn load [self]
@@ -203,8 +213,8 @@
 					(set self.puff-side-pressure (- self.puff-side-pressure (lume.random 0.5 2.0)))
 				)
 
-			; move stores the target x, y, velocity, these get checked against the BUMP world to check for collisions
-		  (let [move {:x self.x :y self.y 
+			; move stores the target position in bump-space, velocity, these get checked against the BUMP world to check for collisions
+		  (let [move {:x (self:get-collision-x) :y (self:get-collision-y)
 		              :velocity {:x self.velocity.x :y self.velocity.y }}]
 
 				(when (and (love.keyboard.isDown "z") (>= self.airsupply 0))
@@ -260,17 +270,14 @@
 						; (set move.y (- move.y (/ self.height 2)))
 						
 						; do collision check and resolution
-						(let [ (x y) (self:get-collision-pos-offset)
-						       
+						(let [
 						       (actual-x actual-y cols len)
-						       (self.game.world:check self x y )] 
+						       (self.game.world:check self move.x move.y )] 
 
 							(when (> len 0)
 							    (print "an actual collision occurred!")
 									(print "move.x: " move.x)
 									(print "move.y: " move.y)
-									(print "move.x: " x)
-									(print "move.y: " y)
 									(print "move.velocity: " move.velocity.x " " move.velocity.y)
 									(print "acual-x: " actual-x)
 									(print "acual-y: " actual-y)
@@ -283,11 +290,9 @@
 					
 						
 						; apply move to player
-						(set self.x move.x)
-						(set self.y move.y)
+						(self:set-pos-from-collision move.x move.y)
 						(set self.velocity move.velocity)
-						(let [ (x y) (self:get-collision-pos-offset) ]
-							(self.game.world:update self x y))
+						(self.game.world:update self move.x move.y)
 
      	)
     )
