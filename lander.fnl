@@ -233,16 +233,24 @@
 					(set self.puff-side-pressure (- self.puff-side-pressure (lume.random 0.5 2.0)))
 				)
 
-			; move stores the target position in bump-space, velocity, these get checked against the BUMP world to check for collisions
-		  (let [move {:x (self:get-collision-x) :y (self:get-collision-y)
-		              :velocity {:x self.velocity.x :y self.velocity.y }}]
+		;; apply acceleration & drag outside of the move thing so we don't mistake it for a bump impact
 
+				; apply "linear drag" & "speed cap" to velocity
+				(local vel-speed (lume.distance 0 0 self.velocity.x self.velocity.y))
+				(when (> vel-speed 0)
+					(local new-speed (linear_movetowards vel-speed 0 (* dt self.drag-speed))) ; drag
+					(local new-speed (lume.clamp new-speed 0 self.max-velocity)) ; speed limit
+					(set self.velocity.x (* self.velocity.x (/ new-speed vel-speed)))
+					(set self.velocity.y (* self.velocity.y (/ new-speed vel-speed)))
+				)
+
+				; acceleration
 				(when (and (love.keyboard.isDown "z") (>= self.airsupply 0))
 	  	        	(let [vx (math.cos (- self.rotation (/ math.pi 2)) )
 											vy (math.sin (- self.rotation (/ math.pi 2)) )]
 
-						(set move.velocity.x (+ self.velocity.x (* dt self.speed vx)))
-						(set move.velocity.y (+ self.velocity.y (* dt self.speed vy)))
+						(set self.velocity.x (+ self.velocity.x (* dt self.speed vx)))
+						(set self.velocity.y (+ self.velocity.y (* dt self.speed vy)))
 					)
 
 					; spawn puff particles
@@ -254,28 +262,14 @@
 
 					(set self.airsupply (- self.airsupply dt))
 	  	        )
-						; apply drag to velocity
-						(local vel-speed (lume.distance 0 0 move.velocity.x move.velocity.y))
-						(when (and (> vel-speed 0) (not (love.keyboard.isDown "z")))
-							(local new-speed (linear_movetowards vel-speed 0 (* dt self.drag-speed)))
-							(set move.velocity.x (* move.velocity.x (/ new-speed vel-speed)))
-							(set move.velocity.y (* move.velocity.y (/ new-speed vel-speed)))
-						)
 
-				    ; set bounds on y-axis acceleration
-						(if (> move.velocity.y self.max-velocity)
-						    (set move.velocity.y (* (lume.sign move.velocity.y) self.max-velocity))
-							    (< move.velocity.y (- 0 self.max-velocity ) )
-						    (set move.velocity.y (* (lume.sign move.velocity.y) self.max-velocity))) 
-					
+			; move stores the target position in bump-space, velocity, these get checked against the BUMP world to check for collisions
+		  (let [move {:x (self:get-collision-x) :y (self:get-collision-y)
+		              :velocity {:x self.velocity.x :y self.velocity.y }}]
+
+						(set move.x (+ move.x (* move.velocity.x dt)))											
 						(set move.y (+ move.y (* self.velocity.y dt)))
 
-						; sets bounds on x-axis acceleration
-						(if (> (math.abs move.velocity.x) 350)
-						    (set move.velocity.x (* (lume.sign move.velocity.x) 350))) 
-			          
-
-						(set move.x (+ move.x (* move.velocity.x dt)))
 						self
 						(if (> move.velocity.x 1)
 				   		(set move.direction 1))
@@ -373,7 +367,6 @@
 						; apply move to player
 						(self:set-pos-from-collision goal-x goal-y)
 						(set self.velocity move.velocity)
-
 				  )
 
      	)
