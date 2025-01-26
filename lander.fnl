@@ -190,7 +190,7 @@
 			;(print "AYO!! keypressed." key)
 
 			; start charging
-			(when (and (= key "x") (not self.charge_time)) (set self.charge_time game.i-time))
+			(when (and (= key "x") (not self.charge_time)) (set self.charge_time (game:gametime)))
 		)
 
 			:update (fn update [self dt]
@@ -385,7 +385,7 @@
 				(love.graphics.line self.x self.y mousex mousey)
 			)
 			(when self.charge_time
-				(local charge (math.min 1 (/ (- game.i-time self.charge_time) self.charge_max)))
+				(local charge (math.min 1 (/ (- (game:gametime) self.charge_time) self.charge_max)))
 				(local charge-radius 20)
 				(local angle1 0)
 				(local angle2 (* charge 2 math.pi))
@@ -411,7 +411,7 @@
 			(local emotion :awake)
 			(local sprite (. self.face-sprites emotion))
 			(local framecount (. face-framecounts emotion))
-			(local frame (+ 1 (% (math.floor (* self.game.i-time face-anim-fps)) framecount)))
+			(local frame (+ 1 (% (math.floor (* (self.game:gametime) face-anim-fps)) framecount)))
 			(local quad (. face-quads frame))
 			(love.graphics.draw sprite quad self.x self.y 0 1 1
 				(/ (self.sprite:getWidth) 2)

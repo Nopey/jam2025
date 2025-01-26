@@ -35,10 +35,10 @@
       :internal-w 320
       :internal-h 240
 
-      ; "current time" that stops during hitstun (unlike love.timer.getTime)
-      :i-time 0
       ; amount of hitstun remaining
       :hitstun 0
+      ; used to change the 'current time' without running into floating point precision issues
+      :gametime-offset 0
 
       ; table of sprites
       :sprites []
@@ -63,7 +63,7 @@
       
       :init (fn init [self]
             ; (set self.test (hero.make-player self 100 100))
-
+            (set self.gametime-offset 0)
             
             (set self.world (bump.newWorld 32))
             (set self.test-map (sti "assets/maps/map1.lua" ["bump"]))
@@ -138,11 +138,14 @@
 
     )     
       :update (fn update [self dt]
+        (var dt dt)
+
         ; handle hitstun, freeze dt during hitstun.
         (set self.hitstun (math.max 0 (- self.hitstun dt)))
-        (local dt (if (> self.hitstun 0) 0 dt))
-
-        (set self.i-time (+ self.i-time dt))
+        (when (> self.hitstun 0)
+            (set self.gametime-offset (- self.gametime-offset dt))
+            (set dt 0)
+        )
 
         (self.test-map:update dt)
 
@@ -197,12 +200,12 @@
 
         ; send the shader the canvas
         ; (self.crt-shader:send "SCREEN_TEXTURE" self.g-canvas)
-        ; (self.crt-shader:send "iTime" self.i-time)
+        ; (self.crt-shader:send "iTime" (self:gametime))
 
         ; (love.graphics.print   (.. "velocity-x: " self.test.velocity.x) 0 0)
         ; (love.graphics.print   (.. "velocity-y: " self.test.velocity.y) 0 25)
         ; (love.graphics.print   (.. "bullets: " (lume.count self.test.bullets)) 0 50)
-        ; (love.graphics.print   (.. "i-time: " self.i-time) 0 75)
+        ; (love.graphics.print   (.. "i-time: " (self:gametime)) 0 75)
         ; (love.graphics.print   (.. "rotation: " self.test.rotation) 0 100)
         
         (each [k bullet (pairs self.test.bullets)]
@@ -236,7 +239,7 @@
                   ; completely out, draw alarm on all frames.
                   (< self.test.airsupply 0)
                   ; blink alarm when we're low
-                  (and (< self.test.airsupply self.test.airsupply-alarmthreshold) (< (% self.i-time 0.8) 0.5))
+                  (and (< self.test.airsupply self.test.airsupply-alarmthreshold) (< (% (self:gametime) 0.8) 0.5))
             )
             (love.graphics.draw self.sprites.airsupply_alarm supply-x supply-y)
         )
@@ -285,6 +288,10 @@
             (local maximum-hitstun 0.3)
             (local incremental-hitstun (or amount 0.1))
             (set self.hitstun (math.min maximum-hitstun (+ incremental-hitstun self.hitstun)))
+      )
+
+      :gametime (fn gametime [self]
+            (+ self.gametime-offset (love.timer.getTime))
       )
 
       ; each HUMP compatible gamestate will need to implement this for hot reloading
