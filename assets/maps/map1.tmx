@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="16" height="96" tilewidth="16" tileheight="16" infinite="0" nextlayerid="9" nextobjectid="27">
+<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="16" height="96" tilewidth="16" tileheight="16" infinite="0" nextlayerid="9" nextobjectid="30">
  <editorsettings>
   <export target="map1.lua" format="lua"/>
  </editorsettings>
@@ -2036,6 +2036,7 @@
    </wangset>
   </wangsets>
  </tileset>
+ <tileset firstgid="1261" source="water.tsx"/>
  <layer id="1" name="background-water" width="16" height="96">
   <data encoding="base64" compression="zlib">
    eJzty6ENAAAIBDEEQ7L/JASPe9tLTna6oibwZ3me53me53me53me53me53me/33yAu94Sa0=
@@ -2051,17 +2052,21 @@
    <property name="collidable" type="bool" value="true"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJztmEsKgDAMROfaCm79LBXteVXUhaAIpvAcUMjCwjCZ/ErTSipvrH84rxdLev81u0XwJH8K8qcg/xf0u8ePjH9Ufw7/SXwO/c7xo/uH1k/XD11/dP7d5y/t/99/3vcnXT/0/KDzT+eP1u/ev1/A0/Xj2r9VkH/S+/gV2nYHEf8Pfnr+Or9f3OcnnX8aT+vPwT8F8a3Oe8qrnWV/cb7+d/K+v939//Fx/KD7/f2TjYvN6AGBOg==
+   eJztmMEKhDAMROe3Ffaq7nEX7fdq0D2KS1N4DljIRZgmk2RSzCSpP7HPxfdhs6L6Mx6WwZP+S9J/Sfq/A3/3/JH5z/JvET+Jb8HfOX+0fmj+dP/Q/UfX333+0vE/+vN+P+n+oecHXX+6fjR/d/3eAU/3j6t+X0n/i+rz12nfHWTi//mn56/z/4v7/KTrT+Np/i38h44n7fOgBh/Y+bjn3xPzJ3aYb3m/3+7xP/g8/qvz/f2VhW5WKZh9XA==
   </data>
  </layer>
- <objectgroup id="5" name="test" visible="0" offsetx="0" offsety="16">
+ <objectgroup id="5" name="dangers" offsetx="0" offsety="16">
   <properties>
-   <property name="collidable" type="bool" value="false"/>
+   <property name="collidable" type="bool" value="true"/>
   </properties>
-  <object id="23" gid="1192" x="176" y="1376" width="16" height="16"/>
-  <object id="24" gid="1192" x="64" y="1376" width="16" height="16"/>
-  <object id="25" gid="1192" x="48" y="1408" width="16" height="16"/>
-  <object id="26" gid="1192" x="192" y="1408" width="16" height="16"/>
+  <object id="23" name="rock" gid="1192" x="176" y="1376" width="16" height="16"/>
+  <object id="24" name="rock" gid="1192" x="64" y="1376" width="16" height="16"/>
+  <object id="25" name="rock" gid="1192" x="48" y="1408" width="16" height="16"/>
+  <object id="26" name="rock" gid="1192" x="192" y="1408" width="16" height="16"/>
+  <object id="27" name="whirlpool" gid="1417" x="192" y="1248" width="16" height="16"/>
+  <object id="28" x="48.6667" y="1230">
+   <point/>
+  </object>
  </objectgroup>
  <objectgroup id="8" name="spawn-location">
   <object id="22" name="Player" gid="1239" x="112" y="1456" width="16" height="16"/>
