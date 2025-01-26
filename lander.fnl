@@ -6,13 +6,29 @@
 ; (var bullets [])
 
 (local face-anim-fps 2)
-(local face-quads (let [image-w 384 image-h 32]
-	{
-		:neutral [
-			(love.graphics.newQuad 0 0 32 32 image-w image-h)
-			(love.graphics.newQuad 32 0 32 32 image-w image-h)
-		]
-	}
+(local face-framecounts {
+	:!! 1
+	:awake 5
+	:blank 1
+	:deathstare 1
+	:happy 5
+	:overwhelmed 1
+	:overwhelmed2 2
+	:pleased 5
+	:qq 1
+	:sad 2
+	:sleeping 5
+	:surprised 5
+	:-w- 1
+})
+(local face-quads (let [image-w 160 image-h 32]
+	[
+		(love.graphics.newQuad   0 0 32 32 image-w image-h)
+		(love.graphics.newQuad  32 0 32 32 image-w image-h)
+		(love.graphics.newQuad  64 0 32 32 image-w image-h)
+		(love.graphics.newQuad  96 0 32 32 image-w image-h)
+		(love.graphics.newQuad 128 0 32 32 image-w image-h)
+	]
 ))
 
 (var input [])
@@ -92,8 +108,11 @@
 				)
 			)
 
-			(set self.face-sprite
-					(love.graphics.newImage "assets/player-faces.png"))
+			(set self.face-sprites {})
+			(each [emotion _ (pairs face-framecounts)]
+				(tset self.face-sprites emotion (love.graphics.newImage (.. "assets/faces/" emotion ".png")))
+			)
+			(print self.face-sprites)
 		)
 
      	 :keyreleased (fn keyreleased [self key]
@@ -232,10 +251,12 @@
 								(/ (self.sprite:getHeight) 2))
 
 			; draw the face
-			(local frames (. face-quads :neutral))
-			(local frame (+ 1 (% (math.floor (* self.game.i-time face-anim-fps)) (table.getn frames))))
-			(local frame (. frames frame))
-			(love.graphics.draw self.face-sprite frame self.x self.y 0 1 1
+			(local emotion :awake)
+			(local sprite (. self.face-sprites emotion))
+			(local framecount (. face-framecounts emotion))
+			(local frame (+ 1 (% (math.floor (* self.game.i-time face-anim-fps)) framecount)))
+			(local quad (. face-quads frame))
+			(love.graphics.draw sprite quad self.x self.y 0 1 1
 				(/ (self.sprite:getWidth) 2)
 				(/ (self.sprite:getHeight) 2)
 			)
