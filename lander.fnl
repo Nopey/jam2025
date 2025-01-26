@@ -20,6 +20,7 @@
 	:sleeping 5
 	:surprised 5
 	:-w- 1
+	:face-damage 4
 })
 (local face-quads (let [image-w (* 32 5) image-h 32]
 	[
@@ -236,6 +237,7 @@
 
 		:update (fn update [self dt]
 			(if self.died-offscreen (do
+				(self:apply-emotion :blank 1)
 				(when (> (self.game:gametime) (+ 3 self.died-offscreen))
 					(local menu (require :menu))
 					(menu:init) ; HACK: resetting menu
@@ -253,8 +255,10 @@
 			; update face
 			(when (< self.face-resettime (love.timer.getTime))
 				(if
-					(< self.damage (* self.damage-max .66)) (self:apply-emotion :awake 1)
-					(self:apply-emotion :sad 1)
+					(> self.damage (* self.damage-max .9)) (self:apply-emotion :deathstare 1)
+					(> self.damage (* self.damage-max .66)) (self:apply-emotion :sad 1)
+					(> self.damage 0) (self:apply-emotion :awake 1.5)
+					(self:apply-emotion (lume.randomchoice [:awake :awake :awake :-w-]) 1.5)
 				)
 			)
 
@@ -454,8 +458,13 @@
 						; apply impact effects, damage
 						(local impact (lume.distance self.velocity.x self.velocity.y move.velocity.x move.velocity.y))
 						(when (> impact 0)
-							; TODO: apply more effects (sparks, sound..)
+							; TODO: apply more impact sound
 							(print "impact of strength " impact "!")
+							(if
+								(> impact 250) (self:apply-emotion :overwhelmed 2.5)
+								(> impact 100) (self:apply-emotion :overwhelmed 1)
+								(self:apply-emotion (lume.randomchoice [:surprised :!!]) 1)
+							)
 							(set self.damage (+ self.damage impact))
 							(self.game:apply-screenshake 0.2 (/ impact 100) 10)
 						)
@@ -528,7 +537,7 @@
 
 		:apply-emotion (fn apply-emotion [self emotion duration]
 				(when (not (= self.face-emotion emotion))
-					(set self.face-time (+ 0.15 (love.timer.getTime))) ; blank face for a moment
+					(set self.face-time (+ 0.1 (love.timer.getTime))) ; blank face for a moment
 					(set self.face-emotion emotion)
 				)
 				(set self.face-resettime (+ duration (love.timer.getTime))) ; for going back to neutral
