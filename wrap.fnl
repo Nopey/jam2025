@@ -4,8 +4,7 @@
 (local lume (require :lib.lume))
 (local hump (require :lib.hump))
 (local enemy (require :enemy-spawner))
-; (local hero (require :player))
-(local game (require :game))
+(local menu (require :menu))
 
 (local gamestate hump.gamestate)
 
@@ -43,25 +42,6 @@
 ;                            ["a" "b" "c"]
 ;                            ["one" "two" "three"]
 ;                          ]))
-
-(var menu {
-        :keyreleased (fn keyreleased [self key code]
-                    (if (= key "x") 
-                       (gamestate.switch game)
-                       (= key "c")
-                       (print "returned from coroutine: " (coroutine.resume spawner))))
-
-       :draw (fn draw [self] 
-                 (let [width (love.graphics.getWidth)
-                       height (love.graphics.getHeight)]
-                   (love.graphics.print "press x or c" (/ width 2) (/ height 2) ))
-             )
-     })
-
-
-
-; Jank, turn player into a proper module with a make-player later
-
 
 
 (fn love.load []
