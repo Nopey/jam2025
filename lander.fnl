@@ -367,7 +367,7 @@
 							      
 									; resolve collisions by type
 							    (each [_ col (pairs cols)]
-								    (print "col-type: " col.other.layer.type)
+								    ;(print "col-type: " col.other.layer.type)
 
 
 										(if (= col.other.type "bubble")
@@ -375,16 +375,16 @@
 										    	(print "bubble collision")
 									    	)
 									    	(do
-											    (print "an actual collision occurred!")
-													(print "goal-x: " goal-x)
-													(print "goal-y: " goal-y)
-													(print "move.x: " move.x)
-													(print "move.y: " move.y)
-													(print "col.move.x: " col.move.x " col.move.y: " col.move.y)
-													(print "move.velocity: " move.velocity.x " " move.velocity.y)
-													(print "acual-x: " actual-x)
-													(print "acual-y: " actual-y)
-													(print "col.normal.x: " col.normal.x " col.normal.y: " col.normal.y)
+											    ;(print "an actual collision occurred!")
+												;	(print "goal-x: " goal-x)
+												;	(print "goal-y: " goal-y)
+												;	(print "move.x: " move.x)
+												;	(print "move.y: " move.y)
+												;	(print "col.move.x: " col.move.x " col.move.y: " col.move.y)
+												;	(print "move.velocity: " move.velocity.x " " move.velocity.y)
+												;	(print "acual-x: " actual-x)
+												;	(print "acual-y: " actual-y)
+												;	(print "col.normal.x: " col.normal.x " col.normal.y: " col.normal.y)
 
 												; emit sparks
 												(var spark-pressure (math.abs (+

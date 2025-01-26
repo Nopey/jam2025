@@ -14,7 +14,7 @@
 
 	   	:move (fn move [self dt]
 
-								(print "bullet x: " self.position.x " y: " self.position.y)
+								;(print "bullet x: " self.position.x " y: " self.position.y)
 	   	          
 	   	          (let [vx (math.cos self.rotation)
 	   	                vy (math.sin self.rotation)]
