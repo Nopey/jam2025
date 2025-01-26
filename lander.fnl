@@ -151,9 +151,9 @@
 					)
 					self.use-mouse-controls (do
 						(local [mousex mousey] (self.game:getmouse))
-						(local target_angle (lume.angle self.x self.y mousex mousey))
+						(local target_angle (+ (lume.angle self.x self.y mousex mousey) (/ math.pi 2)))
 						(local mouse-control-sensitivity 10)
-						(set target_rot_speed (* mouse-control-sensitivity (- target_angle self.rotation (* -0.5 math.pi))))
+						(set target_rot_speed (* mouse-control-sensitivity (angle.delta target_angle self.rotation)))
 					)
 				)
 				(local rot-acceleration 25)
