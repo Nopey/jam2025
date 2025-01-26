@@ -256,19 +256,13 @@
   </objectgroup>
  </tile>
  <tile id="156">
-  <objectgroup draworder="index" id="2">
-   <object id="1" x="0" y="1" width="16" height="13"/>
+  <objectgroup draworder="index" id="3">
+   <object id="5" x="0" y="0" width="16" height="16"/>
   </objectgroup>
   <animation>
    <frame tileid="156" duration="150"/>
-   <frame tileid="159" duration="150"/>
    <frame tileid="157" duration="150"/>
-  </animation>
- </tile>
- <tile id="157">
-  <animation>
-   <frame tileid="157" duration="100"/>
-   <frame tileid="156" duration="100"/>
+   <frame tileid="159" duration="150"/>
   </animation>
  </tile>
  <tile id="160">
