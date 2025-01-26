@@ -53,6 +53,7 @@
 (fn menu.init [self]
     (set self.g-canvas (love.graphics.newCanvas self.internal-w self.internal-h))
     (set self.anim-frame 1)
+    (set self.anim-start nil)
 
     (love.graphics.setDefaultFilter :linear)
     (set self.effect (moonshine moonshine.effects.scanlines))

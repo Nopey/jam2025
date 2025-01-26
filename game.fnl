@@ -6,7 +6,7 @@
 (local bump (require :lib.bump))
 
 (local airsupplyline-quads {})
-(local airsupplyline-fps -3)
+(local airsupplyline-fps -3) ; oops i made the airsupply animate backwards
 (let [frame-w 32 frame-h 16 frame-count 4] (for [f 1 frame-count]
     (table.insert airsupplyline-quads
         (love.graphics.newQuad 0 (* (- f 1) frame-h) frame-w frame-h frame-w (* frame-h frame-count))
@@ -319,10 +319,12 @@
             ]
       )
 
-      :apply-hitstun (fn apply-hitstun [self amount]
-            (local maximum-hitstun 0.3)
+      :apply-hitstun (fn apply-hitstun [self amount maximum-hitstun]
+            (local maximum-hitstun (or maximum-hitstun 0.3))
             (local incremental-hitstun (or amount 0.1))
-            (set self.hitstun (math.min maximum-hitstun (+ incremental-hitstun self.hitstun)))
+            (when (> maximum-hitstun self.hitstun) ; don't apply hitstun if someone else has applied more
+                  (set self.hitstun (math.min maximum-hitstun (+ incremental-hitstun self.hitstun)))
+            )
       )
 
       ; duration: how long to apply screenshake

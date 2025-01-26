@@ -1,4 +1,4 @@
-
+(local hump (require :lib.hump))
 (local lume (require :lib.lume))
 (local bullet (require :bullet))
 (local puff (require :puff))
@@ -228,15 +228,31 @@
 			(when (and (= key "x") (not self.charge_time)) (set self.charge_time (game:gametime)))
 		)
 
-			:update (fn update [self dt]
+		:update (fn update [self dt]
+			(if self.died-offscreen (do
+				(when (> (self.game:gametime) (+ 1 self.died-offscreen))
+					(hump.gamestate.switch (require :menu))
+				)
+				(set self.velocity.x 0)
+				(set self.velocity.y 0)
+			)
+				(self:alive-update dt)
+			)
+		)
+
+		:alive-update (fn alive-update [self dt]
 
 			; check if player has gone offscreen
-			(local offscreen-threshold 0)
+			(local offscreen-threshold -8)
 			(when (or
 					(> self.y (+ self.game.map-y game.internal-h offscreen-threshold))
 					(< (+ self.y offscreen-threshold) self.game.map-y)
 				)
-				(self.todo-die)
+
+				; player is offscreen, kill them.
+				; TODO: play face emotion for offscreen death
+				(self.game:apply-hitstun 0.25 0.25)
+				(set self.died-offscreen (self.game:gametime))
 			)
 
 			;; acceleration for player rotation
