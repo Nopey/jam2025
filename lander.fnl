@@ -285,6 +285,7 @@
 				(love.graphics.setLineWidth 2)
 				(love.graphics.arc "line" arctype self.x self.y charge-radius angle1 angle2 segments)
 				(love.graphics.setColor 1 1 1)
+				(love.graphics.setLineWidth 1)
 			)
 
 			; draw the body
