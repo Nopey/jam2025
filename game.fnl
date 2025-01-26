@@ -35,7 +35,10 @@
       :internal-w 320
       :internal-h 240
 
+      ; "current time" that stops during hitstun (unlike love.timer.getTime)
       :i-time 0
+      ; amount of hitstun remaining
+      :hitstun 0
 
       ; table of sprites
       :sprites []
@@ -70,12 +73,14 @@
 	            (love.audio.newSource "assets/3pops/pop3.ogg" "static")
             ])
 
+            (love.graphics.setDefaultFilter :linear)
             (set self.effect (moonshine moonshine.effects.scanlines))
             (set self.effect (self.effect.chain moonshine.effects.desaturate))
             (set self.effect (self.effect.chain moonshine.effects.boxblur))
             (set self.effect (self.effect.chain moonshine.effects.glow))
             (set self.effect (self.effect.chain moonshine.effects.chromasep))
             (set self.effect (self.effect.chain moonshine.effects.crt))
+            (love.graphics.setDefaultFilter :nearest)
      
             (set self.sprites.airsupply_tank (love.graphics.newImage "assets/airsupply_tank.png"))
             (set self.sprites.airsupply_air (love.graphics.newImage "assets/airsupply_air.png"))
@@ -97,8 +102,12 @@
 
 
     )     
-    :update (fn update [self dt]
-        (set self.i-time (+ self.i-time  (* 1.0 dt ) ))
+      :update (fn update [self dt]
+        ; handle hitstun, freeze dt during hitstun.
+        (set self.hitstun (math.max 0 (- self.hitstun dt)))
+        (local dt (if (> self.hitstun 0) 0 dt))
+
+        (set self.i-time (+ self.i-time dt))
 
         (self.test-map:update dt)
 
@@ -112,7 +121,7 @@
                     (table.remove self.test.bullets k)
                     ;(print "removing bullet!")
                   )))
-      
+
     )
      :draw (fn draw [self]
 
@@ -198,10 +207,9 @@
             (set self.effect.desaturate.strength 0.05)
             ; (set self.effect.desaturate.strength 0.2)
 
-            (set self.effect.scanlines.phase self.i-time)
+            (set self.effect.scanlines.phase (* 1.5 (love.timer.getTime)))
             (set self.effect.scanlines.width (* scale 0.75))
             ; (set self.effect.scanlines.thickness (* scale 0.3))
-            ; (set self.effect.scanlines.phase 1)
             (set self.effect.chromasep.radius (* scale 1))
             (set self.effect.boxblur.radius (* scale 0.3))
 
@@ -226,10 +234,16 @@
             ]
       )
 
+      :apply-hitstun (fn apply-hitstun [self amount]
+            (local maximum-hitstun 0.3)
+            (local incremental-hitstun (or amount 0.1))
+            (set self.hitstun (math.min maximum-hitstun (+ incremental-hitstun self.hitstun)))
+      )
+
       ; each HUMP compatible gamestate will need to implement this for hot reloading
       :reload (fn reload [self]
                   (lume.hotswap :game)
-                  (self.init self))
+                  (self:init))
 
       :keypressed (fn keypressed [self key scancode isrepeat]
                   (self.test:keypressed key scancode isrepeat))
