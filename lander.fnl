@@ -228,13 +228,16 @@
 			(when (and (= key "x") (not self.charge_time)) (set self.charge_time (game:gametime)))
 		)
 
+		:is-dead #$1.died-offscreen
+
 		:update (fn update [self dt]
 			(if self.died-offscreen (do
-				(when (> (self.game:gametime) (+ 0.5 self.died-offscreen))
+				(when (> (self.game:gametime) (+ 3 self.died-offscreen))
 					(local menu (require :menu))
 					(menu:init) ; HACK: resetting menu
 					(hump.gamestate.switch menu)
 				)
+				(set self.charge_time nil)
 				(self:move-update dt) ; move even when dead, just no acceleration and whatnot
 			)
 				(self:alive-update dt)

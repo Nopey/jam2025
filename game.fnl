@@ -129,6 +129,7 @@
             (set self.sprites.airsupply_air (love.graphics.newImage "assets/airsupply_air.png"))
             (set self.sprites.airsupply_alarm (love.graphics.newImage "assets/airsupply_alarm.png"))
             (set self.sprites.airsupply_line (love.graphics.newImage "assets/airsupply_line.png"))
+            (set self.sprites.youdied (love.graphics.newImage "assets/youdied.png"))
 
               (self.test:load)
               ; ; testing wave generator
@@ -279,6 +280,11 @@
             (love.graphics.draw self.sprites.airsupply_alarm supply-x supply-y)
         )
 
+        ; draw youdied overlay
+        (when (self.test:is-dead)
+            (love.graphics.draw self.sprites.youdied 0 0)
+        )
+
         (love.graphics.setCanvas)
         (do
             (local scale (math.min
@@ -298,7 +304,7 @@
             (set self.effect.chromasep.radius (* scale 1))
             (set self.effect.boxblur.radius (* scale 0.3))
 
-            
+            ; (love.graphics.draw self.g-canvas 0 0) ; if you want to see the raw framebuffer
             (self.effect
                   #(love.graphics.draw self.g-canvas screen-x screen-y 0 scale)
             )
