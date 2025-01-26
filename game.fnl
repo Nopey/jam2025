@@ -55,7 +55,8 @@
 
       :map-x 0
       :map-y 0
-      :map-scroll-speed 0.025
+      :map-scroll-speed 0.05
+      :map-scroll-enabled true
 
 
       :puff-sfx nil
@@ -146,6 +147,8 @@
         (self.test-map:update dt)
 
         (self.test:update dt)
+
+        
         
         (each [k bullet (pairs self.test.bullets)]
               (bullet:move dt)
@@ -156,8 +159,9 @@
                   )))
 
 
-      
-      (set self.map-y (- self.map-y self.map-scroll-speed ))
+      ; only scroll if enabled, good for debug
+      (if self.map-scroll-enabled
+            (set self.map-y (- self.map-y self.map-scroll-speed )))
       ; Debug scroll buttons
       (if (love.keyboard.isDown "pageup")
          (set self.map-y (- self.map-y (* 20 self.map-scroll-speed ))))
@@ -167,7 +171,7 @@
      :draw (fn draw [self]
      
 
-      (set self.map-y (- self.map-y self.map-scroll-speed ) )
+      ; (set self.map-y (- self.map-y self.map-scroll-speed ) )
         ; set the canvas we're rendering to
         ; (self.g-canvas:clear)
         ; (love.graphics.setCanvas self.g-canvas)
@@ -179,10 +183,13 @@
 
         ; draw the map
         (self.test-map:draw  (- self.map-x) (- self.map-y))
+        ; (self.test-map:draw  self.map-x self.map-y)
         (love.graphics.setCanvas {1 self.g-canvas :stencil true})
+
 
         (love.graphics.push)
         (love.graphics.translate (- self.map-x) (- self.map-y))
+        ; (love.graphics.translate self.map-x self.map-y)
 
         ; (love.graphics.setCanvas self.g-canvas)
         
@@ -286,7 +293,11 @@
                   (self:init))
 
       :keypressed (fn keypressed [self key scancode isrepeat]
+                  (when (= "f3" key)
+                        (set self.map-scroll-enabled (not self.map-scroll-enabled)))
                   (self.test:keypressed key scancode isrepeat))
+
+      
       :keyreleased (fn keyreleased [self key scancode]
                   (self.test:keyreleased key scancode)
                   (when (= "f1" key) (set self.draw_wireframe (not self.draw_wireframe)))

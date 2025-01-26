@@ -10,7 +10,7 @@ return {
   tilewidth = 16,
   tileheight = 16,
   nextlayerid = 9,
-  nextobjectid = 23,
+  nextobjectid = 27,
   properties = {},
   tilesets = {
     {
@@ -7836,7 +7836,7 @@ return {
       },
       encoding = "base64",
       compression = "zlib",
-      data = "eJztmM0KgCAQhPe1C7r2cyzK502wjiK4wueAwVyCYXb2T3Q3szmDs/B/jQhW/20fPHxSPzj1g1O/B//q+SPz7/XfIn6S38K/cv7o+aH90/1D9x9df/X9S8c/5k/7/KT7h94fdP3p+tH+1ee3Bz7dP6rzuzj1H6vP32Tp7cAT/69P71/l+4v6/qTrT/Np/+rnnzr/gPUHn+dfln+/L+GOeAFdf3oK"
+      data = "eJztmEsKgDAMROfaCm79LBXteVXUhaAIpvAcUMjCwjCZ/ErTSipvrH84rxdLev81u0XwJH8K8qcg/xf0u8ePjH9Ufw7/SXwO/c7xo/uH1k/XD11/dP7d5y/t/99/3vcnXT/0/KDzT+eP1u/ev1/A0/Xj2r9VkH/S+/gV2nYHEf8Pfnr+Or9f3OcnnX8aT+vPwT8F8a3Oe8qrnWV/cb7+d/K+v939//Fx/KD7/f2TjYvN6AGBOg=="
     },
     {
       type = "objectgroup",
@@ -7844,29 +7844,71 @@ return {
       id = 5,
       name = "test",
       class = "",
-      visible = true,
+      visible = false,
       opacity = 1,
       offsetx = 0,
-      offsety = 0,
+      offsety = 16,
       parallaxx = 1,
       parallaxy = 1,
-      properties = {},
+      properties = {
+        ["collidable"] = false
+      },
       objects = {
         {
-          id = 2,
+          id = 23,
           name = "",
           type = "",
           shape = "rectangle",
-          x = 169.25,
-          y = 1369.5,
+          x = 176,
+          y = 1376,
           width = 16,
           height = 16,
           rotation = 0,
-          gid = 292,
+          gid = 1192,
           visible = true,
-          properties = {
-            ["collidable"] = true
-          }
+          properties = {}
+        },
+        {
+          id = 24,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 64,
+          y = 1376,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 1192,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 25,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 48,
+          y = 1408,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 1192,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 26,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 192,
+          y = 1408,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 1192,
+          visible = true,
+          properties = {}
         }
       }
     },

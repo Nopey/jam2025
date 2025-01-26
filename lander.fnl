@@ -121,6 +121,24 @@
 			)
 
 
+			; BUMP world collision filter: react differently to different collision objects
+		  :collision-filter (fn collision-filter [item other]
+		      ; (print "other: " other)
+
+		      ; (each [key value (pairs other)]
+		      ;       (print "key: " key " value: " value)
+		      ;       (if (= key "layer")
+			     ;        (each [name layer (pairs value)]
+			     ;              (print "name: " name " layer: " layer)))
+
+		      ;           )
+		      
+					(if (= other.layer.type "special")
+				    	"bounce"
+				    	"bounce"
+			    )
+		   )
+
 			:get-collision-pos (fn get-collision-pos [self]
 			     (values 
 				  	 (- self.x (/ self.width 2)) 
@@ -272,29 +290,91 @@
 						; (set move.y (- move.y (/ self.height 2)))
 						
 						; do collision check and resolution
-						(let [
-						       (actual-x actual-y cols len)
-						       (self.game.world:check self move.x move.y )] 
+						(let [ (actual-x actual-y cols len)
+						       (self.game.world:check self move.x move.y self.collision-filter)] 
 
+
+							
+									(self.game.world:update self actual-x actual-y)
+							    (var goal-x actual-x)
+							    (var goal-y actual-y)
+
+							    
 							(when (> len 0)
-							    (print "an actual collision occurred!")
-									(print "move.x: " move.x)
-									(print "move.y: " move.y)
-									(print "move.velocity: " move.velocity.x " " move.velocity.y)
-									(print "acual-x: " actual-x)
-									(print "acual-y: " actual-y)
-							    (set move.x actual-x)
-							    (set move.y actual-y)
-							    (set move.velocity {:x 0 :y 0})
+							    (print "no. collisions: " len)
+							      
+									; resolve collisions by type
+							    (each [_ col (pairs cols)]
+								    (print "col-type: " col.other.layer.type)
+
+
+										(if (= col.other.type "bubble")
+										    (do
+										    	(print "bubble collision")
+									    	)
+									    	(do
+											    (print "an actual collision occurred!")
+													(print "goal-x: " goal-x)
+													(print "goal-y: " goal-y)
+													(print "move.x: " move.x)
+													(print "move.y: " move.y)
+													(print "col.move.x: " col.move.x " col.move.y: " col.move.y)
+													(print "move.velocity: " move.velocity.x " " move.velocity.y)
+													(print "acual-x: " actual-x)
+													(print "acual-y: " actual-y)
+													(print "col.normal.x: " col.normal.x " col.normal.y: " col.normal.y)
+						
+
+											    ; resolve the actual overlap of the collision
+											    
+											    (set goal-x (+ goal-x col.move.x))
+											    (set goal-y (+ goal-y col.move.y))
+											    ; (set goal-y (+ goal.y col.move.y))
+									    		
+											    ; (set move.velocity {:x 0 :y 0})
+											    ; if x-velocity > y-velocity, take the normal of x (x-axis dominant direction)
+											    ; otherwise, take the normal of the y-axis 
+
+													(if (not= col.normal.x 0)
+														    (set move.velocity.x (- 0 move.velocity.x))
+															(not= col.normal.y 0)
+														    (set move.velocity.y (- 0 move.velocity.y))
+														  nil
+													    )
+											    
+											    ; (if (> (math.abs col.move.x) (math.abs col.move.y)) 
+														 ;    (set move.velocity.x (- 0 move.velocity.x))
+
+															; (= (math.abs move.velocity.x) (math.abs move.velocity.y))
+															; 	(do 
+															; 		(set move.velocity.x (- 0 move.velocity.x))
+															; 		(set move.velocity.y (- 0 move.velocity.y))
+															; 	    )
+																
+															; default case
+													    ; (set move.velocity.y (- 0 move.velocity.y))
+											      ;   )
+											    ; (set self.rotation (+ math.pi (math.atan2 self.velocity.x self.velocity.y)))
+											    ; (set self.rotation (+ self.rotation math.pi))
+									    		)
+								    )
+						
+								    
+				          )
+							    
+							    ; (set move.x actual-x)
+							    ; (set move.y actual-y)
+							    ; (set move.velocity {:x 0 :y 0})
 					    )
 							
-							)
+							
 					
 						
 						; apply move to player
-						(self:set-pos-from-collision move.x move.y)
+						(self:set-pos-from-collision goal-x goal-y)
 						(set self.velocity move.velocity)
-						(self.game.world:update self move.x move.y)
+
+				  )
 
      	)
     )
