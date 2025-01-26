@@ -49,10 +49,14 @@
 		:game game
      	:x start-x
      	:y start-y
-     	:speed 50
+		:speed 120 ; forwards acceleration
+		:max-velocity 1000
 
-			:width 32
-			:height 32
+		; rectangular collider
+		; NOTE: this is set smaller than one might expect because the walls' collision is oversize, and also
+		; because it's cool to have a eensy collider on the player in a bullet hell game 😎😎
+			:width 10
+			:height 10
      	
 		:use-mouse-controls false
 
@@ -68,8 +72,6 @@
 			:airsupply 50
 			:airsupply-max 80
 			:airsupply-alarmthreshold 2
-
-			:max-velocity 100
 
 			; when did the player start charging?
 			:charge_time nil
@@ -199,7 +201,7 @@
 				)
 				; try to achieve target_rot_speed
 				(local rot-acceleration 25)
-				(local max-rot-speed 2.5)
+				(local max-rot-speed 3.5)
 				(set target_rot_speed (lume.clamp target_rot_speed (- max-rot-speed) max-rot-speed))
 				(local new-rot-velocity (linear_movetowards self.rot-velocity target_rot_speed (* dt rot-acceleration)))
 				(local rot-accel-applied (- new-rot-velocity self.rot-velocity))
