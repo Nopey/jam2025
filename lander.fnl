@@ -236,7 +236,7 @@
 		:is-dead #$1.died-time
 
 		:update (fn update [self dt]
-			(if self.died-time (do
+			(if (self:is-dead) (do
 				(self:apply-emotion :blank 1)
 				(when (> (self.game:gametime) (+ 3 self.died-time))
 					(local menu (require :menu))
@@ -244,6 +244,13 @@
 					(hump.gamestate.switch menu)
 				)
 				(set self.charge_time nil)
+
+				; exponential decay for momentum when dead
+				(local decay (math.exp (* -0.8 dt)))
+				(local lineardecay 15)
+				(set self.velocity.x (linear_movetowards (* self.velocity.x decay) 0 (* dt lineardecay)))
+				(set self.velocity.y (linear_movetowards (* self.velocity.y decay) 0 (* dt lineardecay)))
+
 				(self:move-update dt) ; move even when dead, just no acceleration and whatnot
 			)
 				(self:alive-update dt)
