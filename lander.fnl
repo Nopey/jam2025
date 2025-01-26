@@ -108,7 +108,7 @@
 
 			:update (fn update [self dt]
 
-			  (let [move {:x 0 :y 0}]
+			  (let [move {:x 0 :y 0 :velocity 0}]
 
 			  	; gravity
 			  	; (set self.velocity.y (+ self.velocity.y (* dt 350)))

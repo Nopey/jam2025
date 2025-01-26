@@ -3,6 +3,7 @@
 (local lume (require :lib.lume))
 (local moonshine (require :lib.moonshine))
 (local sti (require :lib.sti))
+(local bump (require :lib.bump))
 
 {
 
@@ -43,6 +44,9 @@
 
       :effect nil
 
+      ; bump collision detection world
+      :world nil
+      
       :test-map (sti "assets/testmap.lua" "bump")
 
       :puff-sfx nil
@@ -50,6 +54,11 @@
       :init (fn init [self]
             (set self.test (hero.make-player self 100 100))
 
+            (set self.world (bump.newWorld 32))
+            (test-map.bump_init self.world)
+
+
+            
             (set self.g-canvas (love.graphics.newCanvas self.internal-w self.internal-h))
 
             (set self.puff-sfx [
@@ -92,6 +101,8 @@
         (self.test-map:update dt)
 
         (self.test:update dt)
+        (self.world:move self.test self.test.x self.test.y)
+        
         (each [k bullet (pairs self.test.bullets)]
               (bullet:move dt)
               (if (bullet:hit)
@@ -99,6 +110,7 @@
                     (table.remove self.test.bullets k)
                     (print "removing bullet!")
                   )))
+      
     )
      :draw (fn draw [self]
 
