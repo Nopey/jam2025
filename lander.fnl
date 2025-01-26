@@ -6,16 +6,43 @@
 ; (var bullets [])
 
 (local face-anim-fps 2)
-(local face-quads (let [image-w 384 image-h 32]
-	{
-		:neutral [
-			(love.graphics.newQuad 0 0 32 32 image-w image-h)
-			(love.graphics.newQuad 32 0 32 32 image-w image-h)
-		]
-	}
+(local face-framecounts {
+	:!! 1
+	:awake 5
+	:blank 1
+	:deathstare 1
+	:happy 5
+	:overwhelmed 1
+	:overwhelmed2 2
+	:pleased 5
+	:qq 1
+	:sad 2
+	:sleeping 5
+	:surprised 5
+	:-w- 1
+})
+(local face-quads (let [image-w 160 image-h 32]
+	[
+		(love.graphics.newQuad   0 0 32 32 image-w image-h)
+		(love.graphics.newQuad  32 0 32 32 image-w image-h)
+		(love.graphics.newQuad  64 0 32 32 image-w image-h)
+		(love.graphics.newQuad  96 0 32 32 image-w image-h)
+		(love.graphics.newQuad 128 0 32 32 image-w image-h)
+	]
 ))
 
 (var input [])
+
+(fn linear_movetowards [from to max_delta]
+    (local delta (- to from))
+    (local delta_sign (if (> delta 0) 1 -1))
+    (if
+        (> (math.abs delta) max_delta)
+            (+ (* delta_sign max_delta) from)
+        to
+    )
+)
+
 
 (fn make-player [game start-x start-y]  
     {
@@ -32,7 +59,7 @@
 			
       ; radians
 			:rotation 0
-			:rot-speed 1.5
+			:rot-velocity 0
 			:drag-speed 10
 
 			:airsupply 5
@@ -81,8 +108,11 @@
 				)
 			)
 
-			(set self.face-sprite
-					(love.graphics.newImage "assets/player-faces.png"))
+			(set self.face-sprites {})
+			(each [emotion _ (pairs face-framecounts)]
+				(tset self.face-sprites emotion (love.graphics.newImage (.. "assets/faces/" emotion ".png")))
+			)
+			(print self.face-sprites)
 		)
 
      	 :keyreleased (fn keyreleased [self key]
@@ -108,86 +138,112 @@
 
 			:update (fn update [self dt]
 
-			  (let [move {:x 0 :y 0 :velocity 0}]
-
-			  	; gravity
-			  	; (set self.velocity.y (+ self.velocity.y (* dt 350)))
-
-			  	    
-
-			    (if 
+			  ; acceleration for player rotation
+				(local rot-decay (math.exp (* -1.8 dt)))
+				(local rot-lineardecay 0.1)
+				(var target_rot_speed (linear_movetowards (* self.rot-velocity rot-decay) 0 (* dt rot-lineardecay)))
+			    (if
 					(love.keyboard.isDown "right") (do
-						(set self.rotation (angle.normalize (+ self.rotation (* dt self.rot-speed))))
+						(set target_rot_speed 999)
 					)
 					(love.keyboard.isDown "left") (do
-						(set self.rotation (angle.normalize (- self.rotation (* dt self.rot-speed))))
+						(set target_rot_speed -999)
 					)
 					self.use-mouse-controls (do
 						(local [mousex mousey] (self.game:getmouse))
 						(local target_angle (lume.angle self.x self.y mousex mousey))
-						(set self.rotation (angle.movetowards self.rotation target_angle (* dt self.rot-speed)))
+						(local mouse-control-sensitivity 10)
+						(set target_rot_speed (* mouse-control-sensitivity (- target_angle self.rotation (* -0.5 math.pi))))
 					)
 				)
+				(local rot-acceleration 25)
+				(local max-rot-speed 2.5)
+				(set target_rot_speed (lume.clamp target_rot_speed (- max-rot-speed) max-rot-speed))
+				(set self.rot-velocity (linear_movetowards self.rot-velocity target_rot_speed (* dt rot-acceleration)))
+				(set self.rotation (+ self.rotation (* dt self.rot-velocity)))
 
-			(when (and (love.keyboard.isDown "z") (>= self.airsupply 0))
-  	        	(let [vx (math.cos (- self.rotation (/ math.pi 2)) )
-										vy (math.sin (- self.rotation (/ math.pi 2)) )]
 
-					(set self.velocity.x (+ self.velocity.x (* dt self.speed vx)))
-					(set self.velocity.y (+ self.velocity.y (* dt self.speed vy)))
-				)
+			; move stores the target x, y, velocity, these get checked against the BUMP world to check for collisions
+		  (let [move {:x self.x :y self.y 
+		              :velocity {:x self.velocity.x :y self.velocity.y }}]
 
-				; spawn puff particles
-				(set self.puff-pressure (+ self.puff-pressure dt))
-				(while (> self.puff-pressure 0)
-					(self:spawn-puff)
-					(set self.puff-pressure (- self.puff-pressure (lume.random 0.1)))
-				)
+				(when (and (love.keyboard.isDown "z") (>= self.airsupply 0))
+	  	        	(let [vx (math.cos (- self.rotation (/ math.pi 2)) )
+											vy (math.sin (- self.rotation (/ math.pi 2)) )]
 
-				(set self.airsupply (- self.airsupply dt))
-  	        )
+						(set move.velocity.x (+ self.velocity.x (* dt self.speed vx)))
+						(set move.velocity.y (+ self.velocity.y (* dt self.speed vy)))
+					)
+
+					; spawn puff particles
+					(set self.puff-pressure (+ self.puff-pressure dt))
+					(while (> self.puff-pressure 0)
+						(self:spawn-puff)
+						(set self.puff-pressure (- self.puff-pressure (lume.random 0.1)))
+					)
+
+					(set self.airsupply (- self.airsupply dt))
+	  	        )
 			  	    
-			    
-			    ; (if (love.keyboard.isDown "down")
-				   ;      (set self.velocity.y (+ self.velocity.y (* dt 600))))
-			    ; (if (love.keyboard.isDown "up")
-				   ;      (set self.velocity.y (+ self.velocity.y (* dt -800))))
-		    
-			    ; set bounds on y-axis acceleration
-					(if (> self.velocity.y self.max-velocity)
-					    (set self.velocity.y (* (lume.sign self.velocity.y) self.max-velocity))
-					    (< self.velocity.y (- 0 self.max-velocity ) )
-					    (set self.velocity.y (* (lume.sign self.velocity.y) self.max-velocity))) 
-					
-					(set self.y (+ self.y (* self.velocity.y dt)))
 
-					; sets bounds on x-axis acceleration
-					(if (> (math.abs self.velocity.x) 350)
-					    (set self.velocity.x (* (lume.sign self.velocity.x) 350))) 
+						; if player isn't moving left or right
+						(if (not (love.keyboard.isDown "z"))
+				   		(set move.velocity.x 
+				   		     (if (> (math.abs move.velocity.x) 1) 
+				   		         (- move.velocity.x (* dt self.drag-speed (lume.sign move.velocity.x)))
+				   		         0)))
 
-					; if player isn't moving left or right
-					(if (not (love.keyboard.isDown "z"))
-			   		(set self.velocity.x 
-			   		     (if (> (math.abs self.velocity.x) 1) 
-			   		         (- self.velocity.x (* dt self.drag-speed (lume.sign self.velocity.x)))
-			   		         0)))
-
-					; if player isn't moving left or right
-					(if (not (love.keyboard.isDown "z")) 
-			   		(set self.velocity.y 
-			   		     (if (> (math.abs self.velocity.y) 1) 
-			   		         (- self.velocity.y (* dt self.drag-speed (lume.sign self.velocity.y)))
-			   		         0)))
+						; if player isn't moving left or right
+						(if (not (love.keyboard.isDown "z")) 
+				   		(set move.velocity.y 
+				   		     (if (> (math.abs move.velocity.y) 1) 
+				   		         (- move.velocity.y (* dt self.drag-speed (lume.sign move.velocity.y)))
+				   		         0)))
 			            	
-					(set self.x (+ self.x (* self.velocity.x dt)))
-					self
-					(if (> self.velocity.x 1)
-			   		(set self.direction 1))
 
-					(if (< self.velocity.x -1)
-			   		(set self.direction -1))
-		    )
+
+				    ; set bounds on y-axis acceleration
+						(if (> move.velocity.y self.max-velocity)
+						    (set move.velocity.y (* (lume.sign move.velocity.y) self.max-velocity))
+							    (< move.velocity.y (- 0 self.max-velocity ) )
+						    (set move.velocity.y (* (lume.sign move.velocity.y) self.max-velocity))) 
+					
+						(set move.y (+ move.y (* self.velocity.y dt)))
+
+						; sets bounds on x-axis acceleration
+						(if (> (math.abs move.velocity.x) 350)
+						    (set move.velocity.x (* (lume.sign move.velocity.x) 350))) 
+			          
+
+						(set move.x (+ move.x (* move.velocity.x dt)))
+						self
+						(if (> move.velocity.x 1)
+				   		(set move.direction 1))
+
+						(if (< move.velocity.x -1)
+				   		(set move.direction -1))
+
+
+						; do collision check and resolution
+
+						(let [ (actual-x actual-y cols len) (self.game.world:check self move.x move.y)] 
+							; (print "acual-x: " actual-x)
+							; (print "acual-x: " actual-y)
+							; (print "cols: "    cols)
+							; (print "len: "     len)
+
+							(if (> 0 len)
+							    (print "an actual collision occurred!"))
+							
+							)
+					
+						
+						; apply move to player
+						(set self.x move.x)
+						(set self.y move.y)
+						(set self.velocity move.velocity)
      	)
+    )
 
 
      	:draw (fn draw [self]
@@ -220,10 +276,12 @@
 								(/ (self.sprite:getHeight) 2))
 
 			; draw the face
-			(local frames (. face-quads :neutral))
-			(local frame (+ 1 (% (math.floor (* self.game.i-time face-anim-fps)) (table.getn frames))))
-			(local frame (. frames frame))
-			(love.graphics.draw self.face-sprite frame self.x self.y 0 1 1
+			(local emotion :awake)
+			(local sprite (. self.face-sprites emotion))
+			(local framecount (. face-framecounts emotion))
+			(local frame (+ 1 (% (math.floor (* self.game.i-time face-anim-fps)) framecount)))
+			(local quad (. face-quads frame))
+			(love.graphics.draw sprite quad self.x self.y 0 1 1
 				(/ (self.sprite:getWidth) 2)
 				(/ (self.sprite:getHeight) 2)
 			)

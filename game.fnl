@@ -47,15 +47,18 @@
       ; bump collision detection world
       :world nil
       
-      :test-map (sti "assets/testmap.lua" "bump")
+      :test-map nil
 
       :puff-sfx nil
       
       :init (fn init [self]
             (set self.test (hero.make-player self 100 100))
 
+            
             (set self.world (bump.newWorld 32))
-            (test-map.bump_init self.world)
+            (set self.test-map (sti "assets/testmap.lua" ["bump"]))
+            (self.test-map:bump_init self.world)
+            (self.world:add self.test 100 100 32 32)
 
 
             
@@ -68,7 +71,7 @@
             ])
 
             (set self.effect (moonshine moonshine.effects.scanlines))
-            ; (set self.effect (self.effect.chain moonshine.effects.desaturate))
+            (set self.effect (self.effect.chain moonshine.effects.desaturate))
             (set self.effect (self.effect.chain moonshine.effects.boxblur))
             (set self.effect (self.effect.chain moonshine.effects.glow))
             (set self.effect (self.effect.chain moonshine.effects.chromasep))
@@ -96,7 +99,6 @@
     )     
     :update (fn update [self dt]
         (set self.i-time (+ self.i-time  (* 1.0 dt ) ))
-        (set self.effect.scanlines.phase self.i-time)
 
         (self.test-map:update dt)
 
@@ -108,7 +110,7 @@
               (if (bullet:hit)
                   (do 
                     (table.remove self.test.bullets k)
-                    (print "removing bullet!")
+                    ;(print "removing bullet!")
                   )))
       
     )
@@ -189,6 +191,11 @@
             (local screen-x (/ (- (love.graphics.getWidth) (* self.internal-w scale)) 2))
             (local screen-y (/ (- (love.graphics.getHeight) (* self.internal-h scale)) 2))
 
+            ; TODO: Set desaturate strength based on how much damage the player's CRT has taken.
+            (set self.effect.desaturate.strength 0.05)
+            ; (set self.effect.desaturate.strength 0.2)
+
+            (set self.effect.scanlines.phase self.i-time)
             (set self.effect.scanlines.width (* scale 0.75))
             ; (set self.effect.scanlines.thickness (* scale 0.3))
             ; (set self.effect.scanlines.phase 1)
