@@ -99,6 +99,10 @@
 				:quad nil
 			}
 
+			:face-emotion :awake
+			:face-time 0 ; not gametime!
+			:face-resettime 0 ; not gametime!
+
 			:bullets []
 			
 			:shoot (fn shoot [self dir]
@@ -245,6 +249,14 @@
 		)
 
 		:alive-update (fn alive-update [self dt]
+
+			; update face
+			(when (< self.face-resettime (love.timer.getTime))
+				(if
+					(< self.damage (* self.damage-max .66)) (self:apply-emotion :awake 1)
+					(self:apply-emotion :sad 1)
+				)
+			)
 
 			; check if player has gone offscreen
 			(local offscreen-threshold -8)
@@ -496,21 +508,32 @@
 									(/ (self.sprite:getWidth) 2) (/ (self.sprite:getHeight) 2))
 			)
 
+			; draw blank first
+			(love.graphics.draw (. self.face-sprites :blank) (. face-quads 1) self.x self.y 0 1 1
+				(/ (self.sprite:getWidth) 2)
+				(/ (self.sprite:getHeight) 2)
+			)
 			; draw the face
-			(local emotion :awake)
+			(local emotion (if (< self.face-time (love.timer.getTime)) self.face-emotion :blank))
 			(local sprite (. self.face-sprites emotion))
 			(local framecount (. face-framecounts emotion))
 			(local frame (+ 1 (% (math.floor (* (self.game:gametime) face-anim-fps)) framecount)))
 			(local quad (. face-quads frame))
+			; then our emotion
 			(love.graphics.draw sprite quad self.x self.y 0 1 1
 				(/ (self.sprite:getWidth) 2)
 				(/ (self.sprite:getHeight) 2)
 			)
 		)
+
+		:apply-emotion (fn apply-emotion [self emotion duration]
+				(when (not (= self.face-emotion emotion))
+					(set self.face-time (+ 0.15 (love.timer.getTime))) ; blank face for a moment
+					(set self.face-emotion emotion)
+				)
+				(set self.face-resettime (+ duration (love.timer.getTime))) ; for going back to neutral
+		)
      })
-     ; 	:draw (fn draw [self]
-     ; 	    (love.graphics.draw self.sprite self.animation.quad self.x self.y 0 self.direction 1))
-     ; })
 
 {
   ; :make-player make-player
