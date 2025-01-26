@@ -89,6 +89,9 @@
 				(local puff-sound (puff-sound:clone))
 				(puff-sound:play)
 				(table.insert self.bullets (bullet.make self.game self.x self.y self.rotation 500))
+
+				; HACK: Applying hitstun when firing a bullet
+				(game:apply-hitstun)
 			)
 			:spawn-puff (fn spawn-puff [self]
 				(local speed 70)
@@ -133,7 +136,7 @@
 			;(print "AYO!! keypressed." key)
 
 			; start charging
-			(when (and (= key "x") (not self.charge_time)) (set self.charge_time (love.timer.getTime)))
+			(when (and (= key "x") (not self.charge_time)) (set self.charge_time game.i-time))
 		)
 
 			:update (fn update [self dt]
@@ -254,7 +257,7 @@
 				(love.graphics.line self.x self.y mousex mousey)
 			)
 			(when self.charge_time
-				(local charge (math.min 1 (/ (- (love.timer.getTime) self.charge_time) self.charge_max)))
+				(local charge (math.min 1 (/ (- game.i-time self.charge_time) self.charge_max)))
 				(local charge-radius 20)
 				(local angle1 0)
 				(local angle2 (* charge 2 math.pi))

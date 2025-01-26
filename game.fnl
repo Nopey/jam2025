@@ -35,7 +35,10 @@
       :internal-w 320
       :internal-h 240
 
+      ; "current time" that stops during hitstun (unlike love.timer.getTime)
       :i-time 0
+      ; amount of hitstun remaining
+      :hitstun 0
 
       ; table of sprites
       :sprites []
@@ -99,8 +102,12 @@
 
 
     )     
-    :update (fn update [self dt]
-        (set self.i-time (+ self.i-time  (* 1.0 dt ) ))
+      :update (fn update [self dt]
+        ; handle hitstun, freeze dt during hitstun.
+        (set self.hitstun (math.max 0 (- self.hitstun dt)))
+        (local dt (if (> self.hitstun 0) 0 dt))
+
+        (set self.i-time (+ self.i-time dt))
 
         (self.test-map:update dt)
 
@@ -114,7 +121,7 @@
                     (table.remove self.test.bullets k)
                     ;(print "removing bullet!")
                   )))
-      
+
     )
      :draw (fn draw [self]
 
@@ -221,6 +228,12 @@
                   (/ (- (love.mouse.getX) screen-x) scale)
                   (/ (- (love.mouse.getY) screen-y) scale)
             ]
+      )
+
+      :apply-hitstun (fn apply-hitstun [self amount]
+            (local maximum-hitstun 0.3)
+            (local incremental-hitstun (or amount 0.1))
+            (set self.hitstun (math.min maximum-hitstun (+ incremental-hitstun self.hitstun)))
       )
 
       ; each HUMP compatible gamestate will need to implement this for hot reloading
