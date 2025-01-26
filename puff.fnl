@@ -72,8 +72,8 @@
             (> game.i-time self.deadline)
             (> self.position.x (+ radius game.internal-w))
             (< (+ self.position.x radius) 0)
-            (> self.position.y (+ radius game.internal-h))
-            (< (+ self.position.y radius) 0)
+            (> self.position.y (+ self.game.map-y game.internal-h))
+            (< self.position.y self.game.map-y)
         )
     )
 

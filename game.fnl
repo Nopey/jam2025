@@ -155,11 +155,17 @@
                     ;(print "removing bullet!")
                   )))
 
+
+      
+      (set self.map-y (- self.map-y self.map-scroll-speed ))
+      ; Debug scroll buttons
+      (if (love.keyboard.isDown "pageup")
+         (set self.map-y (- self.map-y (* 20 self.map-scroll-speed ))))
+      (if (love.keyboard.isDown "pagedown")
+         (set self.map-y (+ self.map-y (* 20 self.map-scroll-speed ))))
     )
      :draw (fn draw [self]
      
-      (local camera-x 0)
-      (local camera-y (* 100 (math.sin (* 0.1 (love.timer.getTime)))))
 
       (set self.map-y (- self.map-y self.map-scroll-speed ) )
         ; set the canvas we're rendering to
