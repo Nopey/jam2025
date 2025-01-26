@@ -279,8 +279,8 @@
             (local screen-x (/ (- (love.graphics.getWidth) (* self.internal-w scale)) 2))
             (local screen-y (/ (- (love.graphics.getHeight) (* self.internal-h scale)) 2))
             [
-                  (/ (- (love.mouse.getX) screen-x) scale)
-                  (/ (- (love.mouse.getY) screen-y) scale)
+                  (+ (/ (- (love.mouse.getX) screen-x) scale) self.map-x)
+                  (+ (/ (- (love.mouse.getY) screen-y) scale) self.map-y)
             ]
       )
 
