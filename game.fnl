@@ -146,8 +146,8 @@
 
 
     )     
-      :update (fn update [self dt]
-        (var dt dt)
+      :update (fn update [self real-dt]
+        (var dt real-dt)
 
         ; handle hitstun, freeze dt during hitstun.
         (set self.hitstun (math.max 0 (- self.hitstun dt)))
@@ -161,7 +161,7 @@
         (self.test:update dt)
 
       (when (not (= nil self.shake))
-            (set self.shake (- self.shake dt))
+            (set self.shake (- self.shake real-dt))
             (when (< 0 self.shake-fade)
                   (local decay (math.exp (- (* dt self.shake-fade))))
                   ; (print "decay" decay "magn " self.shake-magnitude)

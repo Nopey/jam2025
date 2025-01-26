@@ -46,6 +46,7 @@
         (set self.anim-frame (+ 1 (math.floor (* t anim-fps))))
     )
     (when (> self.anim-frame 8)
+        (game:init) ; HACK: resetting game
         (hump.gamestate.switch game)
     )
     (set self.anim-frame (math.min self.anim-frame (table.getn bg-quads)))

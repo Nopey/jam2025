@@ -230,11 +230,12 @@
 
 		:update (fn update [self dt]
 			(if self.died-offscreen (do
-				(when (> (self.game:gametime) (+ 1 self.died-offscreen))
-					(hump.gamestate.switch (require :menu))
+				(when (> (self.game:gametime) (+ 0.5 self.died-offscreen))
+					(local menu (require :menu))
+					(menu:init) ; HACK: resetting menu
+					(hump.gamestate.switch menu)
 				)
-				(set self.velocity.x 0)
-				(set self.velocity.y 0)
+				(self:move-update dt) ; move even when dead, just no acceleration and whatnot
 			)
 				(self:alive-update dt)
 			)
@@ -251,7 +252,8 @@
 
 				; player is offscreen, kill them.
 				; TODO: play face emotion for offscreen death
-				(self.game:apply-hitstun 0.25 0.25)
+				(self.game:apply-hitstun 0.3 0.5)
+				(self.game:apply-screenshake 0.2 5 10)
 				(set self.died-offscreen (self.game:gametime))
 			)
 
@@ -322,7 +324,10 @@
 
 					(set self.airsupply (- self.airsupply dt))
 	  	        )
+			(self:move-update dt)
+		)
 
+		:move-update (fn move-update [self dt]
 			; move stores the target position in bump-space, velocity, these get checked against the BUMP world to check for collisions
 		  (let [move {:x (self:get-collision-x) :y (self:get-collision-y)
 		              :velocity {:x self.velocity.x :y self.velocity.y }}]
