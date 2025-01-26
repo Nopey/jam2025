@@ -70,12 +70,14 @@
 	            (love.audio.newSource "assets/3pops/pop3.ogg" "static")
             ])
 
+            (love.graphics.setDefaultFilter :linear)
             (set self.effect (moonshine moonshine.effects.scanlines))
             (set self.effect (self.effect.chain moonshine.effects.desaturate))
             (set self.effect (self.effect.chain moonshine.effects.boxblur))
             (set self.effect (self.effect.chain moonshine.effects.glow))
             (set self.effect (self.effect.chain moonshine.effects.chromasep))
             (set self.effect (self.effect.chain moonshine.effects.crt))
+            (love.graphics.setDefaultFilter :nearest)
      
             (set self.sprites.airsupply_tank (love.graphics.newImage "assets/airsupply_tank.png"))
             (set self.sprites.airsupply_air (love.graphics.newImage "assets/airsupply_air.png"))
@@ -195,10 +197,9 @@
             (set self.effect.desaturate.strength 0.05)
             ; (set self.effect.desaturate.strength 0.2)
 
-            (set self.effect.scanlines.phase self.i-time)
+            (set self.effect.scanlines.phase (* 1.5 (love.timer.getTime)))
             (set self.effect.scanlines.width (* scale 0.75))
             ; (set self.effect.scanlines.thickness (* scale 0.3))
-            ; (set self.effect.scanlines.phase 1)
             (set self.effect.chromasep.radius (* scale 1))
             (set self.effect.boxblur.radius (* scale 0.3))
 
@@ -225,7 +226,7 @@
       ; each HUMP compatible gamestate will need to implement this for hot reloading
       :reload (fn reload [self]
                   (lume.hotswap :game)
-                  (self.init self))
+                  (self:init))
 
       :keypressed (fn keypressed [self key scancode isrepeat]
                   (self.test:keypressed key scancode isrepeat))

@@ -7,6 +7,7 @@
     :internal-w 320
     :internal-h 240
     :effect nil
+    :sprite nil
 })
 (fn menu.keyreleased [self key scancode]
     (if (= key "x") 
@@ -17,22 +18,29 @@
 (fn menu.init [self]
     (set self.g-canvas (love.graphics.newCanvas self.internal-w self.internal-h))
 
+    (love.graphics.setDefaultFilter :linear)
     (set self.effect (moonshine moonshine.effects.scanlines))
     (set self.effect (self.effect.chain moonshine.effects.desaturate))
     (set self.effect (self.effect.chain moonshine.effects.boxblur))
     (set self.effect (self.effect.chain moonshine.effects.glow))
     (set self.effect (self.effect.chain moonshine.effects.chromasep))
     (set self.effect (self.effect.chain moonshine.effects.crt))
+    (love.graphics.setDefaultFilter :nearest)
+
+    (set self.sprite (love.graphics.newImage "assets/title screen 4.png"))
 )
 (fn menu.draw [self]
+    ;; offscreen draw
+    (love.graphics.setCanvas self.g-canvas)
+    (love.graphics.draw self.sprite 0 0)
+    (when (> 1.6 (% (love.timer.getTime) 2))
+        (love.graphics.print "press x" 200 200)
+    )
+
     (let [
             width (love.graphics.getWidth)
             height (love.graphics.getHeight)
         ]
-    
-        (love.graphics.setCanvas self.g-canvas)
-        (love.graphics.print "press x" (/ self.internal-w 2) (/ self.internal-h 2) )
-
         (local scale (math.min
                 (/ width self.internal-w)
                 (/ height self.internal-h)
@@ -41,7 +49,7 @@
         (local screen-y (/ (- (love.graphics.getHeight) (* self.internal-h scale)) 2))
 
         (set self.effect.desaturate.strength 0.05)
-        (set self.effect.scanlines.phase (* 10 (love.timer.getTime)))
+        (set self.effect.scanlines.phase (* 3 (love.timer.getTime)))
         (set self.effect.scanlines.width (* scale 0.75))
         ; (set self.effect.scanlines.thickness (* scale 0.3))
         ; (set self.effect.scanlines.phase 1)
