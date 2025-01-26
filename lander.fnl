@@ -76,6 +76,7 @@
 			:charge_max 1.4
 
 			:puff-pressure 0
+			:puff-side-pressure 0
 
 			:sprite nil
 			:face-sprite nil
@@ -96,14 +97,27 @@
 				; HACK: Applying hitstun when firing a bullet
 				(game:apply-hitstun)
 			)
+			;; spawn exhaust from the main thrust
 			:spawn-puff (fn spawn-puff [self]
 				(local speed 70)
 				(local rotation  (+ self.rotation (* math.pi 0.5) (lume.random -0.2 0.2)))
 				(local vx (+ self.velocity.x (* (math.cos rotation) speed)))
 				(local vy (+ self.velocity.y (* (math.sin rotation) speed)))
-				(table.insert self.bullets (puff.make self.game self.x self.y vx vy))
+				(table.insert self.bullets (puff.make self.game self.x self.y vx vy :bubble))
 			)
-			
+
+			;; spawn exhaust from the side thrusters
+			:spawn-puff-side (fn spawn-puff-dot [self side]
+				(local speed 50)
+				(local rotation  (+ self.rotation (* math.pi 0.5) (lume.random -0.2 0.2)))
+				(local vx (+ self.velocity.x (* (math.cos rotation) speed)))
+				(local vy (+ self.velocity.y (* (math.sin rotation) speed)))
+				(local side-dist 12)
+				(local x (+ self.x (* (math.cos (+ self.rotation (* side math.pi))) side-dist)))
+				(local y (+ self.y (* (math.sin (+ self.rotation (* side math.pi))) side-dist)))
+				(table.insert self.bullets (puff.make self.game x y vx vy :dot))
+			)
+
      	:load (fn load [self]
 			(set self.sprite (love.graphics.newImage "assets/player2.png"))
 			(set self.animation.frames 1)
@@ -144,10 +158,14 @@
 
 			:update (fn update [self dt]
 
-			  ; acceleration for player rotation
+			;; acceleration for player rotation
+				; decay old momentum
 				(local rot-decay (math.exp (* -1.8 dt)))
 				(local rot-lineardecay 0.1)
-				(var target_rot_speed (linear_movetowards (* self.rot-velocity rot-decay) 0 (* dt rot-lineardecay)))
+				(set self.rot-velocity (linear_movetowards (* self.rot-velocity rot-decay) 0 (* dt rot-lineardecay)))
+
+				; figure out what player wants to do (their target_rot_speed)
+				(var target_rot_speed self.rot-velocity)
 			    (if
 					(love.keyboard.isDown "right") (do
 						(set target_rot_speed 999)
@@ -162,12 +180,21 @@
 						(set target_rot_speed (* mouse-control-sensitivity (angle.delta target_angle self.rotation)))
 					)
 				)
+				; try to achieve target_rot_speed
 				(local rot-acceleration 25)
 				(local max-rot-speed 2.5)
 				(set target_rot_speed (lume.clamp target_rot_speed (- max-rot-speed) max-rot-speed))
-				(set self.rot-velocity (linear_movetowards self.rot-velocity target_rot_speed (* dt rot-acceleration)))
+				(local new-rot-velocity (linear_movetowards self.rot-velocity target_rot_speed (* dt rot-acceleration)))
+				(local rot-accel-applied (- new-rot-velocity self.rot-velocity))
+				(set self.rot-velocity new-rot-velocity)
 				(set self.rotation (+ self.rotation (* dt self.rot-velocity)))
 
+				; spawn puff dots from side thrusters, according to rot-accel-applied
+				(set self.puff-side-pressure (+ self.puff-side-pressure (math.abs rot-accel-applied)))
+				(while (> self.puff-side-pressure 0)
+					(self:spawn-puff-side (if (> rot-accel-applied 0) 1 0))
+					(set self.puff-side-pressure (- self.puff-side-pressure (lume.random 0.5 2.0)))
+				)
 
 			; move stores the target x, y, velocity, these get checked against the BUMP world to check for collisions
 		  (let [move {:x self.x :y self.y 
