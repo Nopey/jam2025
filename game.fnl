@@ -49,6 +49,7 @@
 
       ; bump collision detection world
       :world nil
+      :draw_wireframe false
       
       :test-map nil
 
@@ -191,7 +192,9 @@
         )
 
                
-      (self.test-map:bump_draw 0 0 1 1)
+      (when self.draw_wireframe
+            (self.test-map:bump_draw 0 0 1 1)
+      )
 
         (love.graphics.setCanvas)
         (do
@@ -247,7 +250,9 @@
       :keypressed (fn keypressed [self key scancode isrepeat]
                   (self.test:keypressed key scancode isrepeat))
       :keyreleased (fn keyreleased [self key scancode]
-                  (self.test:keyreleased key scancode))
+                  (self.test:keyreleased key scancode)
+                  (when (= "f1" key) (set self.draw_wireframe (not self.draw_wireframe)))
+      )
 
       :mousepressed (fn mousepressed [self x y button istouch]
                   (self.test:mousepressed x y button istouch))
