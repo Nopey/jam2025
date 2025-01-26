@@ -151,7 +151,17 @@
 
         (self.test:update dt)
 
-        
+      (when (not (= nil self.shake))
+            (set self.shake (- self.shake dt))
+            (when (< 0 self.shake-fade)
+                  (local decay (math.exp (- (* dt self.shake-fade))))
+                  ; (print "decay" decay "magn " self.shake-magnitude)
+                  (set self.shake-magnitude (* self.shake-magnitude decay))
+            )
+            (when (> 0 self.shake)
+                  (set self.shake nil)
+            )
+      )
         
         (each [k bullet (pairs self.test.bullets)]
               (bullet:move dt)
@@ -173,6 +183,13 @@
     )
      :draw (fn draw [self]
      
+      (var camera-x self.map-x)
+      (var camera-y self.map-y)
+
+      (when (not (= nil self.shake))
+            (set camera-x (+ camera-x (* self.shake-magnitude (lume.random -1 1))))
+            (set camera-y (+ camera-y (* self.shake-magnitude (lume.random -1 1))))
+      )
 
       ; (set self.map-y (- self.map-y self.map-scroll-speed ) )
         ; set the canvas we're rendering to
@@ -185,14 +202,12 @@
       
 
         ; draw the map
-        (self.test-map:draw  (- self.map-x) (- self.map-y))
-        ; (self.test-map:draw  self.map-x self.map-y)
+        (self.test-map:draw  (- camera-x) (- camera-y))
         (love.graphics.setCanvas {1 self.g-canvas :stencil true})
 
 
         (love.graphics.push)
-        (love.graphics.translate (- self.map-x) (- self.map-y))
-        ; (love.graphics.translate self.map-x self.map-y)
+        (love.graphics.translate (- camera-x) (- camera-y))
 
         ; (love.graphics.setCanvas self.g-canvas)
         
@@ -288,6 +303,18 @@
             (local maximum-hitstun 0.3)
             (local incremental-hitstun (or amount 0.1))
             (set self.hitstun (math.min maximum-hitstun (+ incremental-hitstun self.hitstun)))
+      )
+
+      ; duration: how long to apply screenshake
+      ; magnitude: how much screenshake
+      ; fade: higher number = decays faster. 0 = no decay
+      :apply-screenshake (fn apply-screenshake [self duration magnitude fade]
+            (when (or (= self.shake nil) (> magnitude self.shake-magnitude))
+                  (set self.shake duration)
+                  (set self.shake-magnitude magnitude)
+                  (set self.shake-fade fade)
+                  ; (print "applied " self.shake self.shake-magnitude self.shake-fade)
+            )
       )
 
       :gametime (fn gametime [self]
