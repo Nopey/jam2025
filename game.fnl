@@ -56,12 +56,12 @@
 
             
             (set self.world (bump.newWorld 32))
-            (set self.test-map (sti "assets/testmap.lua" ["bump"]))
+            (set self.test-map (sti "assets/maps/map1.lua" ["bump"]))
             (self.test-map:bump_init self.world)
             (self.world:add self.test 100 100 32 32)
 
+            (print "items in world: " (self.world:getItems))
 
-            
             (set self.g-canvas (love.graphics.newCanvas self.internal-w self.internal-h))
 
             (set self.puff-sfx [
@@ -182,6 +182,9 @@
             (love.graphics.draw self.sprites.airsupply_alarm supply-x supply-y)
         )
 
+               
+      (self.test-map:bump_draw 0 0 1 1)
+
         (love.graphics.setCanvas)
         (do
             (local scale (math.min
@@ -202,6 +205,7 @@
             (set self.effect.chromasep.radius (* scale 1))
             (set self.effect.boxblur.radius (* scale 0.3))
 
+            
             (self.effect
                   #(love.graphics.draw self.g-canvas screen-x screen-y 0 scale)
             )

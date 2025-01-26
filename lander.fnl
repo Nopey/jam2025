@@ -232,7 +232,7 @@
 							; (print "cols: "    cols)
 							; (print "len: "     len)
 
-							(if (> 0 len)
+							(if (> len 0)
 							    (print "an actual collision occurred!"))
 							
 							)

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tileset version="1.10" tiledversion="1.11.1" name="water" tilewidth="16" tileheight="16" tilecount="180" columns="12">
- <image source="Water+.png" width="192" height="240"/>
+ <image source="../Water+.png" width="192" height="240"/>
  <tile id="2">
   <animation>
    <frame tileid="4" duration="100"/>
@@ -106,14 +106,159 @@
    <frame tileid="68" duration="200"/>
   </animation>
  </tile>
+ <tile id="111">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="16" height="16"/>
+  </objectgroup>
+ </tile>
+ <tile id="120">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="2" y="1" width="14" height="15"/>
+  </objectgroup>
+ </tile>
+ <tile id="121">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="2" width="16" height="8"/>
+  </objectgroup>
+ </tile>
  <tile id="122">
-  <animation>
-   <frame tileid="9" duration="800"/>
-   <frame tileid="10" duration="800"/>
-   <frame tileid="11" duration="800"/>
-  </animation>
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="1" width="16" height="15"/>
+  </objectgroup>
+ </tile>
+ <tile id="123">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="1" width="11" height="15"/>
+  </objectgroup>
+ </tile>
+ <tile id="124">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="3" y="2" width="9" height="14"/>
+  </objectgroup>
+ </tile>
+ <tile id="125">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="2" width="9" height="14"/>
+  </objectgroup>
+ </tile>
+ <tile id="132">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="1" y="0" width="15" height="11"/>
+  </objectgroup>
+ </tile>
+ <tile id="133">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="1" width="13" height="15"/>
+  </objectgroup>
+ </tile>
+ <tile id="134">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+  <objectgroup draworder="index" id="5">
+   <object id="4" x="3" y="0" width="9" height="16"/>
+  </objectgroup>
+ </tile>
+ <tile id="135">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="1" y="1" width="15" height="15"/>
+  </objectgroup>
+ </tile>
+ <tile id="136">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="16" height="16"/>
+  </objectgroup>
+ </tile>
+ <tile id="137">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="1" width="15" height="10"/>
+  </objectgroup>
+ </tile>
+ <tile id="144">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="2" width="16" height="8"/>
+  </objectgroup>
+ </tile>
+ <tile id="145">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="2" y="0" width="14" height="11"/>
+  </objectgroup>
+ </tile>
+ <tile id="146">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="16" height="11"/>
+  </objectgroup>
+ </tile>
+ <tile id="147">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="13" height="11"/>
+  </objectgroup>
+ </tile>
+ <tile id="148">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="1" y="0" width="13" height="16"/>
+  </objectgroup>
+ </tile>
+ <tile id="149">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="3" y="0" width="9" height="16"/>
+  </objectgroup>
  </tile>
  <tile id="156">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="1" width="16" height="13"/>
+  </objectgroup>
   <animation>
    <frame tileid="156" duration="150"/>
    <frame tileid="159" duration="150"/>
@@ -160,19 +305,12 @@
    <wangtile tileid="135" wangid="0,0,1,0,1,0,0,0"/>
    <wangtile tileid="136" wangid="1,0,1,0,1,0,1,0"/>
    <wangtile tileid="137" wangid="0,0,0,0,0,0,1,0"/>
+   <wangtile tileid="144" wangid="0,0,1,0,0,0,1,0"/>
    <wangtile tileid="145" wangid="1,0,1,0,0,0,0,0"/>
    <wangtile tileid="146" wangid="1,0,1,0,0,0,1,0"/>
    <wangtile tileid="147" wangid="1,0,0,0,0,0,1,0"/>
    <wangtile tileid="148" wangid="1,0,0,0,0,0,0,0"/>
-  </wangset>
-  <wangset name="water" type="edge" tile="-1">
-   <wangcolor name="" color="#ff0000" tile="-1" probability="1"/>
-   <wangtile tileid="9" wangid="1,0,1,0,1,0,1,0"/>
-   <wangtile tileid="10" wangid="1,0,1,0,1,0,1,0"/>
-   <wangtile tileid="11" wangid="1,0,1,0,1,0,1,0"/>
-  </wangset>
-  <wangset name="Unnamed Set" type="mixed" tile="-1">
-   <wangcolor name="" color="#ff0000" tile="-1" probability="1"/>
+   <wangtile tileid="149" wangid="1,0,0,0,1,0,0,0"/>
   </wangset>
  </wangsets>
 </tileset>
