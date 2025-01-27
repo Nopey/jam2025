@@ -237,7 +237,9 @@
 
 		:update (fn update [self dt]
 			(if (self:is-dead) (do
-				(self:apply-emotion :blank 1)
+				(when (or (< self.face-resettime (love.timer.getTime)) (~= self.face-emotion :surprised))
+					(self:apply-emotion :blank 1)
+				)
 				(when (> (self.game:gametime) (+ 3 self.died-time))
 					(local menu (require :menu))
 					(menu:init) ; HACK: resetting menu
@@ -278,6 +280,7 @@
 
 				; player is offscreen, kill them.
 				(self:die)
+				(self:apply-emotion :surprised 0.5)
 			)
 
 			;; acceleration for player rotation
