@@ -32,12 +32,12 @@
            ))
 
 
-(var spawner (coroutine.create new-spawner ))
+; (var spawner (coroutine.create new-spawner ))
 
-(coroutine.resume spawner [
-                     ["a" "b" "c"]
-                     ["one" "two" "three"]
-                   ])
+; (coroutine.resume spawner [
+;                      ["a" "b" "c"]
+;                      ["one" "two" "three"]
+;                    ])
 ; (var spawner (new-spawner [
 ;                            ["a" "b" "c"]
 ;                            ["one" "two" "three"]
