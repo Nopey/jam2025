@@ -1,3 +1,4 @@
+(local lume (require :lib.lume))
 (local moonshine (require :lib.moonshine))
 (local game (require :game))
 (local hump (require :lib.hump))
@@ -9,6 +10,7 @@
     )
 ))
 (local anim-fps 14)
+(local anim-delay-start 5)
 
 (local twinkle-quads {})
 (local twinkle-x 18)
@@ -42,9 +44,8 @@
 })
 (fn menu.keyreleased [self key scancode]
     (when (= key "x")
-        (set self.anim-start (love.timer.getTime))
+        (set self.anim-start (+ (love.timer.getTime) anim-delay-start))
         (self.crash-sfx:play)
-
     )
 )
 (fn menu.update [self dt]
@@ -72,8 +73,7 @@
         (self.ambient-beach:stop)
         (hump.gamestate.switch game)
     )
-    (set self.anim-frame (math.min self.anim-frame (table.getn bg-quads)))
-
+    (set self.anim-frame (lume.clamp self.anim-frame 1 (table.getn bg-quads)))
 )
 (fn menu.init [self]
     (set self.g-canvas (love.graphics.newCanvas self.internal-w self.internal-h))

@@ -1,10 +1,10 @@
 VERSION=0.1.0
 LOVE_VERSION=11.5
-NAME=DeepSeaDiver
-ITCH_ACCOUNT=change-me-too
+NAME=AWA
+ITCH_ACCOUNT=example
 URL=https://gitlab.com/Nopey/jam2025
-AUTHOR="Magnus Larsen, Tyler Patton"
-DESCRIPTION="Safely get to the seabed"
+AUTHOR="Tyler Patton, Magnus Larsen, Marit Larsen"
+DESCRIPTION="Survive the seabed"
 GITHUB_USERNAME := $(shell grep GITHUB_USERNAME credentials.private | cut -d= -f2)
 GITHUB_PAT := $(shell grep GITHUB_PAT credentials.private | cut -d= -f2)
 LIBS := $(wildcard lib/*)
