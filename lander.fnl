@@ -242,6 +242,7 @@
 				)
 				(when (> (self.game:gametime) (+ 3 self.died-time))
 					(local menu (require :menu))
+					(love.audio.stop self.game.song)
 					(menu:init) ; HACK: resetting menu
 					(hump.gamestate.switch menu)
 				)

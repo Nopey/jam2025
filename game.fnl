@@ -63,8 +63,8 @@
 
       :map-x 0
       :map-y 0
-      :map-scroll-speed 0.05
-      :map-scroll-enabled false
+      :map-scroll-speed 0.4
+      :map-scroll-enabled true
 
 
       :puff-sfx nil
@@ -72,6 +72,10 @@
       :init (fn init [self]
             ; (set self.test (hero.make-player self 100 100))
             (set self.gametime-offset 0)
+
+            (when self.song (love.audio.stop self.song))
+            (set self.song (love.audio.newSource "assets/music/white-illumination.ogg" "stream"))
+            (self.song:play)
             
             (set self.world (bump.newWorld 32))
             (set self.test-map (sti "assets/maps/map1.lua" ["bump"]))

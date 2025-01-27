@@ -10,7 +10,7 @@
     )
 ))
 (local anim-fps 14)
-(local anim-delay-start 5)
+(local anim-delay-start 3.5)
 
 (local twinkle-quads {})
 (local twinkle-x 18)
@@ -106,8 +106,10 @@
         (local twinkle-frame (+ 1 (% (math.floor (* (love.timer.getTime) twinkle-fps)) (table.getn twinkle-frame-remap))))
         (love.graphics.draw self.twinkle-sprite (. twinkle-quads (. twinkle-frame-remap twinkle-frame)) twinkle-x twinkle-y)
     )
-    (when (> 1.6 (% (love.timer.getTime) 2))
-        (love.graphics.print "press x" 200 200)
+    (when (not self.anim-start)
+        (when (> 1.6 (% (love.timer.getTime) 2))
+            (love.graphics.print "press x" 200 200)
+        )
     )
 
     (let [
