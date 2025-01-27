@@ -1,7 +1,7 @@
 (local hero (require :lander))
 (local enemy (require :enemy-spawner))
 (local lume (require :lib.lume))
-(local moonshine (require :lib.moonshine))
+;(local moonshine (require :lib.moonshine))
 (local sti (require :lib.sti))
 (local bump (require :lib.bump))
 
@@ -63,7 +63,7 @@
 
       :map-x 0
       :map-y 0
-      :map-scroll-speed 0.4
+      :map-scroll-speed 0.15
       :map-scroll-enabled true
 
 
@@ -121,12 +121,12 @@
             ])
 
             (love.graphics.setDefaultFilter :linear)
-            (set self.effect (moonshine moonshine.effects.scanlines))
-            (set self.effect (self.effect.chain moonshine.effects.desaturate))
-            (set self.effect (self.effect.chain moonshine.effects.boxblur))
-            (set self.effect (self.effect.chain moonshine.effects.glow))
-            (set self.effect (self.effect.chain moonshine.effects.chromasep))
-            (set self.effect (self.effect.chain moonshine.effects.crt))
+            ;(set self.effect (moonshine moonshine.effects.scanlines))
+            ;(set self.effect (self.effect.chain moonshine.effects.desaturate))
+            ;(set self.effect (self.effect.chain moonshine.effects.boxblur))
+            ;(set self.effect (self.effect.chain moonshine.effects.glow))
+            ;(set self.effect (self.effect.chain moonshine.effects.chromasep))
+            ;(set self.effect (self.effect.chain moonshine.effects.crt))
             (love.graphics.setDefaultFilter :nearest)
      
             (set self.sprites.airsupply_tank (love.graphics.newImage "assets/airsupply_tank.png"))
@@ -302,19 +302,20 @@
             (local screen-y (/ (- (love.graphics.getHeight) (* self.internal-h scale)) 2))
 
             ; TODO: Set desaturate strength based on how much damage the player's CRT has taken.
-            (set self.effect.desaturate.strength 0.05)
+            ; (set self.effect.desaturate.strength 0.05)
             ; (set self.effect.desaturate.strength 0.2)
 
-            (set self.effect.scanlines.phase (* 1.5 (love.timer.getTime)))
-            (set self.effect.scanlines.width (* scale 0.75))
+            ;(set self.effect.scanlines.phase (* 1.5 (love.timer.getTime)))
+            ;(set self.effect.scanlines.width (* scale 0.75))
             ; (set self.effect.scanlines.thickness (* scale 0.3))
-            (set self.effect.chromasep.radius (* scale 1))
-            (set self.effect.boxblur.radius (* scale 0.3))
+            ;(set self.effect.chromasep.radius (* scale 1))
+            ;(set self.effect.boxblur.radius (* scale 0.3))
 
             ; (love.graphics.draw self.g-canvas 0 0) ; if you want to see the raw framebuffer
-            (self.effect
-                  #(love.graphics.draw self.g-canvas screen-x screen-y 0 scale)
-            )
+            ;(self.effect
+            ;      #(love.graphics.draw self.g-canvas screen-x screen-y 0 scale)
+            ;)
+            (love.graphics.draw self.g-canvas screen-x screen-y 0 scale)
         )
 
     	)
