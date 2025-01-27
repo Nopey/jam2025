@@ -66,6 +66,7 @@
       :map-scroll-speed 0.05
       :map-scroll-enabled false
 
+      :bg-music (love.audio.newSource "assets/music/bg-music.mp3" "stream")
 
       :puff-sfx nil
       
