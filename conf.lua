@@ -1,6 +1,6 @@
 love.conf = function(t)
    t.gammacorrect = true
-   t.title, t.identity = "Deep Sea Diver", "Minimal"
+   t.title, t.identity = "AWA", "Minimal"
    t.modules.joystick = false
    t.modules.physics = false
    -- NOTE: running the game at a resolution *above* what is specified here cuts off parts of the graphics, for some reason!
